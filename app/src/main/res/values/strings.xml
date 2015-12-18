@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">travel_south</string>
+    <string name="app_name">Travel_South</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_menu">Menu</string>
 
@@ -13,4 +13,6 @@
     <string name="title_activity_hotel">HotelActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_review">ReviewActivity</string>
+    <string name="facebook_app_id">466777046827505</string>
+
 </resources>

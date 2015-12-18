@@ -12,16 +12,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
 
 public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     LocalActivityManager mLocalActivityManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu2);
+        setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -33,23 +35,22 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //tabhost
+        //Tabhost Manager
         mLocalActivityManager = new LocalActivityManager(this, false);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
 
         TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
         tabHost.setup(mLocalActivityManager);
 
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec("AttractionActivity")
-                .setIndicator("Attraction")
-                .setContent(new Intent(this, AttractionActivity.class));
-        TabHost.TabSpec tabSpec2 = tabHost.newTabSpec("HotelActivity")
-                .setIndicator("Hotel")
-                .setContent(new Intent(this, HotelActivity.class));
-
-
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec("AttractionActivity").setIndicator("Attraction").setContent(new Intent(this, AttractionActivity.class));
+        TabHost.TabSpec tabSpec2 = tabHost.newTabSpec("HotelActivity").setIndicator("Hotel").setContent(new Intent(this, HotelActivity.class));
         tabHost.addTab(tabSpec);
         tabHost.addTab(tabSpec2);
+
+        Intent i = getIntent();
+        String name = i.getStringExtra("name");//name user
+
+        Toast.makeText(getApplicationContext(), "Welcome : "+name, Toast.LENGTH_LONG).show();
 
     }
 
@@ -65,7 +66,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         super.onResume();
         mLocalActivityManager.dispatchResume();
     }
-
 
 
 

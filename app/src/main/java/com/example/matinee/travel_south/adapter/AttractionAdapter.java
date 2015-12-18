@@ -21,6 +21,7 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
     private Context mContext;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         public TextView mName;
 
         public ViewHolder(View view) {
@@ -39,8 +40,7 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.attraction_recycelview, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.attraction_recycelview, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -49,7 +49,6 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         AttractionModel player = attractions.get(position);
-
         viewHolder.mName.setText(player.getName());
 
     }

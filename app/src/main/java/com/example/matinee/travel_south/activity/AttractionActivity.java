@@ -24,7 +24,6 @@ public class AttractionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attraction);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
@@ -33,17 +32,6 @@ public class AttractionActivity extends AppCompatActivity {
         mAdapter = new AttractionAdapter(this, initAttraction());
         mRecyclerView.setAdapter(mAdapter);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
     }
     private List<AttractionModel> initAttraction() {
 

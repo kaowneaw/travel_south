@@ -13,11 +13,12 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
 
-
     </android.support.design.widget.AppBarLayout>
-        <TextView android:layout_height="wrap_content"
-               android:layout_width="wrap_content"
-            android:text="test"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test" />
 
 
 </android.support.design.widget.CoordinatorLayout>
