@@ -8,7 +8,8 @@ import java.util.List;
 public class ResultEntity {
 
     private List<LocationEntity> resultsLocation;
-    private List<String> re;
+    private List<ProvinceEntity> resultsProvince;
+    private List<String> results;
     boolean status;
 
     public List<LocationEntity> getResultsLocation() {
@@ -19,19 +20,27 @@ public class ResultEntity {
         this.resultsLocation = resultsLocation;
     }
 
+    public List<ProvinceEntity> getResultsProvince() {
+        return resultsProvince;
+    }
+
+    public void setResultsProvince(List<ProvinceEntity> resultsProvince) {
+        this.resultsProvince = resultsProvince;
+    }
+
+    public List<String> getResults() {
+        return results;
+    }
+
+    public void setResults(List<String> results) {
+        this.results = results;
+    }
+
     public boolean isStatus() {
         return status;
     }
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public List<String> getRe() {
-        return re;
-    }
-
-    public void setRe(List<String> re) {
-        this.re = re;
     }
 }

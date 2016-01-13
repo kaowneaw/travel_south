@@ -1,47 +1,58 @@
 package com.example.matinee.travel_south.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
+import com.example.matinee.travel_south.activity.SubActivity.ProvinceActivity;
+import com.example.matinee.travel_south.activity.Utill.UserPreference;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private ImageButton btHome_travel, btHome_rec, btHome_checkin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        SettingToobar();
+        initWidget();
+        UserPreference pref = new UserPreference(this);
+        Toast.makeText(getApplicationContext(), pref.getName(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+
+    private void initWidget() {
+
+        btHome_travel = (ImageButton) findViewById(R.id.btHome_travel);
+        btHome_rec = (ImageButton) findViewById(R.id.btHome_rec);
+        btHome_checkin = (ImageButton) findViewById(R.id.btHome_checkin);
+        btHome_travel.setOnClickListener(this);
+        btHome_rec.setOnClickListener(this);
+        btHome_checkin.setOnClickListener(this);
+    }
+
+    private void SettingToobar() {
+        //Toobar setting
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        this.setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+//            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Home");
         } else {
-            super.onBackPressed();
+            Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();
         }
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,37 +70,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(getApplicationContext(), "Menu", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    public void onClick(View v) {
+        if (v == btHome_travel) {
+            startActivity(new Intent(this, ProvinceActivity.class));
+        } else if (v == btHome_rec) {
 
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-            fragmentTransaction.replace(R.id.container, HomeFragment.newInstance());
-            fragmentTransaction.addToBackStack(null).commit();
-        } else if (id == R.id.nav_profile) {
-            fragmentTransaction.replace(R.id.container, ProfileFragment.newInstance("News Feed", "555"));
-            fragmentTransaction.addToBackStack(null).commit();
-        } else if (id == R.id.nav_review) {
-
-        } else if (id == R.id.nav_maps) {
-            fragmentTransaction.replace(R.id.container, MapsFragment.newInstance());
-            fragmentTransaction.addToBackStack(null).commit();
-        } else if (id == R.id.nav_logout) {
+        } else if (v == btHome_checkin) {
 
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

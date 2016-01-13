@@ -1,4 +1,4 @@
-package com.example.matinee.travel_south.activity;
+package com.example.matinee.travel_south.activity.Fragment;
 
 
 import android.app.AlertDialog;
@@ -16,8 +16,10 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
+import com.example.matinee.travel_south.activity.Utill.GPSTracker;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
+import com.example.matinee.travel_south.activity.TRAVELSOUTH;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,7 +28,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -42,7 +46,7 @@ import java.io.IOException;
  * Use the {@link MapsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class MapsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,GoogleMap.OnMarkerClickListener {
     // TODO: Rename parameter arguments, choose names that match
 
     private GoogleApiClient mGoogleApiClient;
@@ -55,6 +59,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private ResultEntity listLocation;
     private double current_lattitude, current_longitude, radius = 5.0;
     private int locationType = 0;
+    private GPSTracker gps;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -103,32 +108,15 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
         googleMap = mMapView.getMap();
         googleMap.setMyLocationEnabled(true);
-
+        googleMap.setOnMarkerClickListener(this);
         maps_list.setOnClickListener(this);
         maps_nearBy.setOnClickListener(this);
         type_locationBT.setOnClickListener(this);
 
-        GPSTracker gps = new GPSTracker(getContext());
-        int status = 0;
-        if (gps.canGetLocation()) {
-            status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-
-            if (status == ConnectionResult.SUCCESS) {
-
-                current_lattitude = gps.getLatitude();
-                current_longitude = gps.getLongitude();
-                //initial marker on map created
-                callService(2000, current_lattitude, current_longitude);
-                LatLng loc = new LatLng(current_lattitude, current_longitude);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 14.0f));
-
-            } else {
-                Toast.makeText(getContext(), "Can't Access GPS", Toast.LENGTH_LONG).show();
-            }
-
-        } else {
-            gps.showSettingsAlert();
+        if (!callGPSTracker()) {
+            this.gps.showSettingsAlert(); //show Dialog open GPS
         }
+
 
     }
 
@@ -145,12 +133,15 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        callGPSTracker();
     }
+
 
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+        Toast.makeText(getContext(), "pause", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -242,6 +233,32 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                 radius = 50.0;
             }
         }
+    }
+
+    private boolean callGPSTracker() {
+
+        this.gps = new GPSTracker(getContext());
+        int status;
+        boolean isLocation = gps.canGetLocation();
+        if (isLocation) {
+            status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+
+            if (status == ConnectionResult.SUCCESS) {
+
+                current_lattitude = gps.getLatitude();
+                current_longitude = gps.getLongitude();
+                //initial marker on map created
+                callService(this.radius, this.current_lattitude, this.current_longitude);
+                LatLng loc = new LatLng(current_lattitude, current_longitude);
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 14.0f));
+
+            } else {
+                Toast.makeText(getContext(), "Can't Access GPS", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+        return isLocation;
     }
 
     private void popupNearBy(String title) {
@@ -363,7 +380,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
             @Override
             protected Void doInBackground(Void... voids) {
-                String url = "http://192.168.1.117/tvs/getlocation.php";
+                String url = "http://" + TRAVELSOUTH.ipconfig + "/tvs/getlocation.php";
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new FormEncodingBuilder()
                         .add("radians", String.valueOf(radians))
@@ -402,6 +419,20 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     private void setMarker(LocationEntity data) {
 
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLat(), data.getLng())).title(data.getLocation_name()));
+        if (data.getType_id() == 1) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLat(), data.getLng())).title(data.getLocationNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
+        } else if (data.getType_id() == 2) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLat(), data.getLng())).title(data.getLocationNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
+        } else if (data.getType_id() == 3) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLat(), data.getLng())).title(data.getLocationNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
+        }
+
+
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Toast.makeText(getContext(),""+marker.getTitle(),Toast.LENGTH_SHORT).show();
+        return false;
     }
 }

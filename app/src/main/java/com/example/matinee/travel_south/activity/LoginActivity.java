@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.example.matinee.travel_south.R;
+import com.example.matinee.travel_south.activity.Utill.UserPreference;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -21,8 +23,10 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -33,34 +37,41 @@ public class LoginActivity extends AppCompatActivity {
     // Login page
     // Creating Facebook CallbackManager Value
     public static CallbackManager callbackmanager;
-
+    private LoginActivity THIS = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Intent toMain = new Intent(getApplicationContext(), MainActivity.class);
-//        startActivity(toMain);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Initialize layout button
-        ImageButton fbbutton = (ImageButton) findViewById(R.id.login_fb_btn);
 
-        fbbutton.setOnClickListener(new View.OnClickListener() {
+        UserPreference pref = new UserPreference(this);
+        if (!pref.getUserID().equals("NULL")) {
+            startActivity(new Intent(this, MainActivity.class));
+            this.finish();
 
-            @Override
-            public void onClick(View v) {
-                // Call private method
-                onFblogin();
-            }
-        });
-        getKeyHash();
+        } else {
+
+            FacebookSdk.sdkInitialize(getApplicationContext());
+            setContentView(R.layout.activity_login);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            // Initialize layout button
+            ImageButton fbbutton = (ImageButton) findViewById(R.id.login_fb_btn);
+
+            fbbutton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // Call private method
+                    onFblogin();
+                }
+            });
+            getKeyHash();
+        }
+
 
     }
 
     // Private method to handle Facebook login and callback
-    private void onFblogin()
-    {
+    private void onFblogin() {
         callbackmanager = CallbackManager.Factory.create();
 
         // Set permissions
@@ -82,11 +93,15 @@ public class LoginActivity extends AppCompatActivity {
                                             String id = object.getString("id");
                                             String name = object.getString("name");
                                             String email = object.getString("email");
+                                            UserPreference pref = new UserPreference(getApplicationContext(), id, name, email);//Facebook not have username and password
+                                            if (pref.commit()) {
+                                                Intent toMain = new Intent(getApplicationContext(), MainActivity.class);
+                                                toMain.putExtra("name", name);
+                                                toMain.putExtra("email", email);
+                                                startActivity(toMain);
+                                                THIS.finish();
+                                            }
 
-                                            Intent toMain = new Intent(getApplicationContext(), MainActivity.class);
-                                            toMain.putExtra("name", name);
-                                            toMain.putExtra("email", email);
-                                            startActivity(toMain);
 
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -103,13 +118,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancel() {
-                        Log.d("Cancel","On cancel");
+                        Log.d("Cancel", "On cancel");
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-                        Log.d("Error",error.toString());
-                        Toast.makeText(getApplicationContext(),"ไม่สามารถเข้าสู่ระบบได้",Toast.LENGTH_LONG).show();
+                        Log.d("Error", error.toString());
+                        Toast.makeText(getApplicationContext(), "ไม่สามารถเข้าสู่ระบบได้", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -120,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackmanager.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
     private void getKeyHash() {

@@ -30,9 +30,12 @@
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -40,14 +43,15 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+            android:label="@string/title_activity_main" />
+        <activity android:name=".activity.SubActivity.ProvinceActivity" />
+        <activity
+            android:name=".activity.SubActivity.LocationActivity"
+            android:label="@string/title_activity_location" />
+        <activity
+            android:name=".activity.SubActivity.LocationDescActivity"
+            android:label="@string/title_activity_location_desc"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

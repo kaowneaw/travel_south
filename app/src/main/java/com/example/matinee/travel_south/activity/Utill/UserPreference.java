@@ -1,4 +1,4 @@
-package com.example.matinee.travel_south.activity;
+package com.example.matinee.travel_south.activity.Utill;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +8,8 @@ public class UserPreference {
     public static final String USER_ID_KEY = "user_id";
     public static final String USERNAME_KEY = "username";
     public static final String PASSWORD_KEY = "password";
+    public static final String NAME_KEY = "name";
+    public static final String EMAIL_KEY = "email";
 
 
     private SharedPreferences sh_pref;
@@ -19,14 +21,15 @@ public class UserPreference {
         sh_edit = sh_pref.edit();
     }
 
-    public UserPreference(Context context, String userid) {
+    public UserPreference(Context context, String userid, String name, String email) {
         this(context);
-        registerUserPreference(userid);
+        registerUserPreference(userid, name, email);
     }
 
-    public void registerUserPreference(String userid) {
+    public void registerUserPreference(String userid, String name, String email) {
         sh_edit.putString(USER_ID_KEY, userid);
-
+        sh_edit.putString(NAME_KEY, name);
+        sh_edit.putString(EMAIL_KEY, email);
 
     }
 
@@ -40,7 +43,15 @@ public class UserPreference {
     }
 
     public String getUserID() {
-        return sh_pref.getString(USER_ID_KEY, "null");
+        return sh_pref.getString(USER_ID_KEY, "NULL");
+    }
+
+    public String getName() {
+        return sh_pref.getString(NAME_KEY, "NULL");
+    }
+
+    public String getEmail() {
+        return sh_pref.getString(EMAIL_KEY, "NULL");
     }
 
 
