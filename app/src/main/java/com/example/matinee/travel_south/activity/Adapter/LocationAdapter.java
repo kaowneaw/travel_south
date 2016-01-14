@@ -23,11 +23,12 @@ public class LocationAdapter extends BaseAdapter {
     Context context;
     List<LocationEntity> listLocation;
     AQuery aq;
+    final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
 
     public LocationAdapter(Context context, List<LocationEntity> listLocation) {
         this.context = context;
         this.listLocation = listLocation;
-        aq = new AQuery(context);
+
     }
 
     @Override
@@ -64,16 +65,18 @@ public class LocationAdapter extends BaseAdapter {
 
             Holder = (widgetHolder) convertView.getTag();
         }
-        Holder.province_name.setText(listLocation.get(position).getLocationNameTH());
+
+        aq = new AQuery(convertView);
+        Holder.province_name.setText(listLocation.get(position).getNameTH());
         Holder.location_desc.setText(listLocation.get(position).getAddressTH());
-        String path = "http://www.jaa-ikuzo.com/tvs/img/location/";
-        aq.id(Holder.img_location).progress(R.id.progress).image(path + listLocation.get(position).getImageLocationName());
+
+        aq.id(Holder.img_location).progress(R.id.progress).image(PATH + listLocation.get(position).getImageLocationFile());
         return convertView;
     }
 
     class widgetHolder {
         ImageView img_location;
         TextView province_name;
-        TextView  location_desc;
+        TextView location_desc;
     }
 }

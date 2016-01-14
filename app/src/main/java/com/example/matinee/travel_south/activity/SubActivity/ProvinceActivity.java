@@ -2,6 +2,7 @@ package com.example.matinee.travel_south.activity.SubActivity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ public class ProvinceActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MultiDex.install(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_province);
         SettingToobar();
@@ -40,7 +42,7 @@ public class ProvinceActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void SettingToobar() {
-        //Toobar setting
+        //Toolbar setting
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         this.setSupportActionBar(toolbar);
 

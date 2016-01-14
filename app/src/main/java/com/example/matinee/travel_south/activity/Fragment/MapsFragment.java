@@ -46,7 +46,7 @@ import java.io.IOException;
  * Use the {@link MapsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,GoogleMap.OnMarkerClickListener {
+public class MapsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleMap.OnMarkerClickListener {
     // TODO: Rename parameter arguments, choose names that match
 
     private GoogleApiClient mGoogleApiClient;
@@ -420,11 +420,11 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private void setMarker(LocationEntity data) {
 
         if (data.getType_id() == 1) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLat(), data.getLng())).title(data.getLocationNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
         } else if (data.getType_id() == 2) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLat(), data.getLng())).title(data.getLocationNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
         } else if (data.getType_id() == 3) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLat(), data.getLng())).title(data.getLocationNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
         }
 
 
@@ -432,7 +432,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Toast.makeText(getContext(),""+marker.getTitle(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
         return false;
     }
 }

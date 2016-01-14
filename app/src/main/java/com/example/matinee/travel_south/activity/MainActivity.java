@@ -2,6 +2,7 @@ package com.example.matinee.travel_south.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MultiDex.install(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SettingToobar();
@@ -40,12 +42,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void SettingToobar() {
-        //Toobar setting
+        //Toolbar setting
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         this.setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
-//            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Home");
         } else {
             Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();

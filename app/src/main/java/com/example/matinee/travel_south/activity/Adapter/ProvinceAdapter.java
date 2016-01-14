@@ -59,7 +59,7 @@ public class ProvinceAdapter extends BaseAdapter {
             Holder = (widgetHolder) convertView.getTag();
         }
 
-        Holder.province_name.setText(listProvince.get(position).getProvince_name());
+        Holder.province_name.setText(listProvince.get(position).getProvinceName());
 
         return convertView;
     }

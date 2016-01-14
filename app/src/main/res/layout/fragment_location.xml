@@ -4,10 +4,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.matinee.travel_south.activity.SubActivity.LocationActivity$PlaceholderFragment">
 
-
     <ListView
         android:id="@+id/lv_location"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Data"
+        android:textSize="18sp" />
 
 </RelativeLayout>

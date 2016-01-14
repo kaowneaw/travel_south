@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -38,6 +39,8 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -49,6 +52,7 @@ public class LocationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MultiDex.install(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
         SettingToobar();
@@ -107,6 +111,7 @@ public class LocationActivity extends AppCompatActivity {
         private int arrTypeLocation[] = {10, 20, 30, 40, 50}; //ID Type Location
         private LocationAdapter adapter;
         private List<LocationEntity> listLocation;
+        private TextView status;
 
         public PlaceholderFragment() {
         }
@@ -133,7 +138,7 @@ public class LocationActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_location, container, false);
-
+            status = (TextView) rootView.findViewById(R.id.status);
             lv_location = (ListView) rootView.findViewById(R.id.lv_location);
 
             return rootView;
@@ -142,10 +147,18 @@ public class LocationActivity extends AppCompatActivity {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+
             lv_location.setAdapter(adapter);
             lv_location.setOnItemClickListener(this);
         }
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            if (listLocation != null && listLocation.size() > 0) {
+                status.setVisibility(View.GONE);
+            }
+        }
 
         private void callService(final int typeId) {
 
@@ -184,6 +197,9 @@ public class LocationActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
+                    if (listLocation.size() > 0) {
+                        status.setVisibility(View.GONE);
+                    }
                     adapter = new LocationAdapter(getActivity(), listLocation);
                     lv_location.setAdapter(adapter);
                 }
