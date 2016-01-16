@@ -1,25 +1,29 @@
-package com.example.matinee.travel_south.activity.Fragment;
-
+package com.example.matinee.travel_south.activity.SubActivity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.multidex.MultiDex;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
-import com.example.matinee.travel_south.activity.Utill.GPSTracker;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.example.matinee.travel_south.activity.TRAVELSOUTH;
+import com.example.matinee.travel_south.activity.Utill.GPSTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,13 +45,8 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MapsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MapsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleMap.OnMarkerClickListener {
-    // TODO: Rename parameter arguments, choose names that match
+public class MapActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleMap.OnMarkerClickListener {
+
 
     private GoogleApiClient mGoogleApiClient;
     private MapView mMapView;
@@ -60,66 +59,80 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private double current_lattitude, current_longitude, radius = 5.0;
     private int locationType = 0;
     private GPSTracker gps;
-
-    public MapsFragment() {
-        // Required empty public constructor
-    }
-
-
-    public static MapsFragment newInstance() {
-
-        return new MapsFragment();
-    }
+    LocationEntity locationIntent;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        MultiDex.install(this);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+        SettingToobar();
         if (checkPlayServices()) {
             // Building the GoogleApi client
             buildGoogleApiClient();
         }
+
+        Bundle data = getIntent().getExtras();
+        locationIntent = data.getParcelable("locationObj");
+        initWidget(savedInstanceState);
+    }
+
+    private void SettingToobar() {
+        //Toolbar setting
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        this.setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Map");
+        } else {
+            Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        initWidget(rootView, savedInstanceState);
+        if (id == android.R.id.home) {
 
-        return rootView;
+            this.finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
-    private void initWidget(View rootView, Bundle savedInstanceState) {
+    private void initWidget(Bundle savedInstanceState) {
 
-        maps_list = (Button) rootView.findViewById(R.id.maps_list);
-        maps_nearBy = (Button) rootView.findViewById(R.id.maps_nearBy);
-        type_locationBT = (ImageButton) rootView.findViewById(R.id.type_locationBT);
-        mMapView = (MapView) rootView.findViewById(R.id.maps);
+        maps_list = (Button) findViewById(R.id.maps_list);
+        maps_nearBy = (Button) findViewById(R.id.maps_nearBy);
+        type_locationBT = (ImageButton) findViewById(R.id.type_locationBT);
+        mMapView = (MapView) findViewById(R.id.maps);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         try {
 
-            MapsInitializer.initialize(getActivity());
+            MapsInitializer.initialize(this);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         googleMap = mMapView.getMap();
-        googleMap.setMyLocationEnabled(true);
+//      googleMap.setMyLocationEnabled(true);
         googleMap.setOnMarkerClickListener(this);
         maps_list.setOnClickListener(this);
         maps_nearBy.setOnClickListener(this);
         type_locationBT.setOnClickListener(this);
-
-        if (!callGPSTracker()) {
-            this.gps.showSettingsAlert(); //show Dialog open GPS
-        }
-
+//
+//        if (!callGPSTracker()) {
+//            this.gps.showSettingsAlert(); //show Dialog open GPS
+//        }
 
     }
-
 
     @Override
     public void onStart() {
@@ -133,7 +146,12 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        callGPSTracker();
+
+        if (locationIntent != null) {
+            LatLng loc = new LatLng(locationIntent.getLatitude(), locationIntent.getLongtitude());
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 14.0f));
+            callService(this.radius, locationIntent.getLatitude(), locationIntent.getLongtitude());
+        }
     }
 
 
@@ -141,7 +159,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        Toast.makeText(getContext(), "pause", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -159,16 +176,16 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     private boolean checkPlayServices() {
 
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
         if (resultCode != ConnectionResult.SUCCESS) {
 
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
 
-                GooglePlayServicesUtil.getErrorDialog(resultCode, getActivity(), PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
 
-                Toast.makeText(getActivity(), "This device is not supported.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "This device is not supported.", Toast.LENGTH_LONG).show();
             }
             return false;
         }
@@ -178,7 +195,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     protected synchronized void buildGoogleApiClient() {
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API).build();
@@ -206,10 +223,8 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         if (v == maps_list) {
             //Intent to list
         } else if (v == maps_nearBy) {
-
             popupNearBy("Distance");
         } else if (v == type_locationBT) {
-
             popupLocationType("Display on Map");
         } else if (v instanceof RadioButton) {
 
@@ -218,11 +233,11 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
             if (v.getId() == R.id.rd_all) {
                 locationType = 0;// 0 is all
             } else if (v.getId() == R.id.rd_natural) {
-                locationType = 1;// 1 is natural
+                locationType = 10;// 10 is natural
             } else if (v.getId() == R.id.rd_culture) {
-                locationType = 2;// 2 is culture
+                locationType = 20;// 20 is culture
             } else if (v.getId() == R.id.rd_hotel) {
-                locationType = 3;// 3 is hotel
+                locationType = 30;// 30 is hotel
             } else if (v.getId() == R.id.rd_5km) {
                 radius = 5.0;
             } else if (v.getId() == R.id.rd_10km) {
@@ -237,11 +252,11 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     private boolean callGPSTracker() {
 
-        this.gps = new GPSTracker(getContext());
+        this.gps = new GPSTracker(this);
         int status;
         boolean isLocation = gps.canGetLocation();
         if (isLocation) {
-            status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+            status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
             if (status == ConnectionResult.SUCCESS) {
 
@@ -253,7 +268,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 14.0f));
 
             } else {
-                Toast.makeText(getContext(), "Can't Access GPS", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Can't Access GPS", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -263,17 +278,17 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     private void popupNearBy(String title) {
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_nearby, null);
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle(title);
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (current_lattitude != 0 && current_longitude != 0)
-                    callService(radius, current_lattitude, current_longitude);
+//                if (current_lattitude != 0 && current_longitude != 0)
+                callService(radius, locationIntent.getLatitude(), locationIntent.getLongtitude());
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -310,17 +325,17 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     private void popupLocationType(String title) {
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_locationtype, null);
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle(title);
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (current_lattitude != 0 && current_longitude != 0)
-                    callService(radius, current_lattitude, current_longitude);
+
+                callService(radius, locationIntent.getLatitude(), locationIntent.getLongtitude());
             }
         });
 
@@ -344,11 +359,11 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         radioArr[3].setOnClickListener(this);
         if (locationType == 0) {
             setSingleRadio(radioArr[0].getId());
-        } else if (locationType == 1) {
+        } else if (locationType == 10) {
             setSingleRadio(radioArr[1].getId());
-        } else if (locationType == 2) {
+        } else if (locationType == 20) {
             setSingleRadio(radioArr[2].getId());
-        } else if (locationType == 3) {
+        } else if (locationType == 30) {
             setSingleRadio(radioArr[3].getId());
         }
         AlertDialog alertDialog = dialogBuilder.create();
@@ -375,15 +390,23 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private void callService(final double radians, final double lat, final double lng) {
 
         googleMap.clear();
+        final ProgressDialog dialog = new ProgressDialog(this);
 
         new AsyncTask<Void, Void, Void>() {
 
+
+            protected void onPreExecute() {
+                dialog.setMessage("Loading...");
+                dialog.show();
+            }
+
             @Override
             protected Void doInBackground(Void... voids) {
-                String url = "http://" + TRAVELSOUTH.ipconfig + "/tvs/getlocation.php";
+                String url = "http://www.jaa-ikuzo.com/tvs/getLocationNearby.php";
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new FormEncodingBuilder()
                         .add("radians", String.valueOf(radians))
+                        .add("type", String.valueOf(locationType))
                         .add("lat", String.valueOf(lat))
                         .add("lng", String.valueOf(lng)).build();
 
@@ -396,12 +419,12 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                     Gson gson = new Gson();
                     Response response = client.newCall(request).execute();
                     String reponse = response.body().string();
-                    Log.v("=>", reponse);
+                    Log.v("Map =>", reponse);
                     listLocation = gson.fromJson(reponse, ResultEntity.class);
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.v("error=>", e.getMessage());
                 }
 
                 return null;
@@ -410,29 +433,31 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 for (LocationEntity location : listLocation.getResultsLocation()) {
                     setMarker(location);
+                    Log.v("Map =>", location.getNameTH());
                 }
             }
         }.execute();
     }
 
     private void setMarker(LocationEntity data) {
-
-        if (data.getType_id() == 1) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
-        } else if (data.getType_id() == 2) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
-        } else if (data.getType_id() == 3) {
+        if (data.getType_id() == 10) {
             googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
+        } else if (data.getType_id() == 20) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
+        } else if (data.getType_id() == 30) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
         }
-
 
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Toast.makeText(getContext(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
         return false;
     }
 }

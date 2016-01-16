@@ -1,7 +1,9 @@
 package com.example.matinee.travel_south.activity.SubActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -12,6 +14,8 @@ import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +29,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Adapter.LocationAdapter;
+import com.example.matinee.travel_south.activity.Model.Journey;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.google.gson.Gson;
@@ -46,11 +51,9 @@ import java.net.URL;
 
 public class LocationDescActivity extends AppCompatActivity {
 
-    private int locationId;
     private ImageView img_location_desc;
     private TextView address_desc, tel_desc;
-    private AQuery aq;
-    private LocationEntity location;
+    private LocationEntity location, locationIntent;
     private final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
     private LinearLayout contrainerJourney;
 
@@ -59,14 +62,15 @@ public class LocationDescActivity extends AppCompatActivity {
         MultiDex.install(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_desc);
-        locationId = getIntent().getIntExtra("locationId", 0);
-        aq = new AQuery(this);
+        Bundle data = getIntent().getExtras();
+        locationIntent = data.getParcelable("locationObj");
         SettingToobar();
         initialWidget();
         callService();
     }
 
     private void initialWidget() {
+
         img_location_desc = (ImageView) findViewById(R.id.img_location_desc);
         address_desc = (TextView) findViewById(R.id.address_desc);
         tel_desc = (TextView) findViewById(R.id.tel_desc);
@@ -80,7 +84,7 @@ public class LocationDescActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Location");
+            getSupportActionBar().setTitle(locationIntent.getNameTH());
         } else {
             Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();
         }
@@ -92,7 +96,7 @@ public class LocationDescActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                String url = "http://www.jaa-ikuzo.com/tvs/getLocationDesc.php?location_id=" + locationId;
+                String url = "http://www.jaa-ikuzo.com/tvs/getLocationDesc.php?location_id=" + locationIntent.getLocation_id();
                 OkHttpClient client = new OkHttpClient();
 
                 Request request = new Request.Builder()
@@ -133,8 +137,35 @@ public class LocationDescActivity extends AppCompatActivity {
                             }
                         }.header("User-Agent", "android"));
 
-                TableRow row = new TableRow(getApplicationContext());
 
+                for (Journey jorney : location.getListJorney()) {
+
+                    TableRow row = new TableRow(getApplicationContext());
+                    row.setPadding(20, 20, 20, 20);
+                    ImageView img = new ImageView(getApplicationContext());
+                    TableRow.LayoutParams layoutImgview = new TableRow.LayoutParams(80, 80);
+                    img.setLayoutParams(layoutImgview);
+                    img.setLayoutParams(layoutImgview);
+                    img.setBackgroundResource(R.drawable.car);
+
+                    TableRow.LayoutParams layout_gravity = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+                    layout_gravity.weight = 1.0f;
+                    layout_gravity.gravity = Gravity.TOP;
+
+                    TextView tv = new TextView(getApplicationContext());
+                    tv.setPadding(50, 0, 0, 0);
+                    tv.setLayoutParams(layout_gravity);
+                    tv.setText(jorney.getJourneyDesc());
+                    tv.setGravity(Gravity.CENTER_VERTICAL);
+                    tv.setTextSize(16);
+                    tv.setTextColor(Color.BLACK);
+
+                    row.setGravity(Gravity.CENTER_VERTICAL);
+                    row.addView(img);
+                    row.addView(tv);
+
+                    contrainerJourney.addView(row);
+                }
 
             }
 
@@ -142,6 +173,13 @@ public class LocationDescActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_location_desc, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -153,6 +191,12 @@ public class LocationDescActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
 
             this.finish();
+
+        } else if (id == R.id.map_desc) {
+
+            Intent i = new Intent(this, MapActivity.class);
+            i.putExtra("locationObj", this.location);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

@@ -210,8 +210,7 @@ public class LocationActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             Intent i = new Intent(getActivity(), LocationDescActivity.class);
-            Toast.makeText(getActivity(), ">>>>" + listLocation.get(position).getLocation_id(), Toast.LENGTH_SHORT).show();
-            i.putExtra("locationId", listLocation.get(position).getLocation_id());
+            i.putExtra("locationObj", listLocation.get(position));
             startActivity(i);
         }
     }

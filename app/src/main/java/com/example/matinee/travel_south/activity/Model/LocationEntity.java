@@ -1,9 +1,12 @@
 package com.example.matinee.travel_south.activity.Model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
-public class LocationEntity {
+public class LocationEntity implements Parcelable {
 
     private int Location_id;
     private String NameTH;
@@ -20,6 +23,7 @@ public class LocationEntity {
     private List<Journey> listJorney;
 
     public LocationEntity(int location_id, String nameTH, String addressTH, String nameEng, String addressEng, String tel, float latitude, float longtitude, float distance, int type_id, int province_id, String imageLocationFile, List<Journey> listJorney) {
+
         Location_id = location_id;
         NameTH = nameTH;
         AddressTH = addressTH;
@@ -34,6 +38,7 @@ public class LocationEntity {
         ImageLocationFile = imageLocationFile;
         this.listJorney = listJorney;
     }
+
 
     public int getLocation_id() {
         return Location_id;
@@ -138,4 +143,55 @@ public class LocationEntity {
     public void setListJorney(List<Journey> listJorney) {
         this.listJorney = listJorney;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(this.Location_id);
+        dest.writeString(this.NameTH);
+        dest.writeString(this.AddressTH);
+        dest.writeString(this.NameEng);
+        dest.writeString(this.AddressEng);
+        dest.writeString(this.Tel);
+        dest.writeFloat(this.Latitude);
+        dest.writeFloat(this.Longtitude);
+        dest.writeFloat(this.distance);
+        dest.writeInt(this.Type_id);
+        dest.writeInt(this.Province_id);
+        dest.writeString(this.ImageLocationFile);
+
+    }
+
+    protected LocationEntity(Parcel in) {
+
+        this.Location_id = in.readInt();
+        this.NameTH = in.readString();
+        this.AddressTH = in.readString();
+        this.NameEng = in.readString();
+        this.AddressEng = in.readString();
+        this.Tel = in.readString();
+        this.Latitude = in.readFloat();
+        this.Longtitude = in.readFloat();
+        this.distance = in.readFloat();
+        this.Type_id = in.readInt();
+        this.Province_id = in.readInt();
+        this.ImageLocationFile = in.readString();
+
+    }
+
+    public static final Parcelable.Creator<LocationEntity> CREATOR = new Parcelable.Creator<LocationEntity>() {
+        public LocationEntity createFromParcel(Parcel source) {
+            return new LocationEntity(source);
+        }
+
+        public LocationEntity[] newArray(int size) {
+            return new LocationEntity[size];
+        }
+    };
 }
