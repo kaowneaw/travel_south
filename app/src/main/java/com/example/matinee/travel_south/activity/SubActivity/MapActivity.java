@@ -4,7 +4,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,16 +18,24 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ActionMenuView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.example.matinee.travel_south.activity.TRAVELSOUTH;
 import com.example.matinee.travel_south.activity.Utill.GPSTracker;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +56,9 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MapActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
@@ -60,6 +75,11 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     private int locationType = 0;
     private GPSTracker gps;
     LocationEntity locationIntent;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +92,15 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
             buildGoogleApiClient();
         }
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         Bundle data = getIntent().getExtras();
         locationIntent = data.getParcelable("locationObj");
         initWidget(savedInstanceState);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void SettingToobar() {
@@ -137,6 +163,7 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     @Override
     public void onStart() {
         super.onStart();
+
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
@@ -436,28 +463,92 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-                for (LocationEntity location : listLocation.getResultsLocation()) {
-                    setMarker(location);
-                    Log.v("Map =>", location.getNameTH());
+//              for (LocationEntity location : listLocation.getResultsLocation()) {
+//                    setMarker(location);
+//               }
+                for (int i = 0; i < listLocation.getResultsLocation().size(); i++) {
+                    setMarker(listLocation.getResultsLocation().get(i), i);
                 }
             }
         }.execute();
     }
 
-    private void setMarker(LocationEntity data) {
+    private void setMarker(LocationEntity data, int index) {
+
         if (data.getType_id() == 10) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
         } else if (data.getType_id() == 20) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
         } else if (data.getType_id() == 30) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(data.getNameTH()).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
         }
 
+        // Setting a custom info window adapter for the google map
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
+
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker arg0) {
+
+                // Getting view from the layout file info_window_layout
+                View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+
+                int index = Integer.parseInt(arg0.getTitle());
+
+                TextView tv = (TextView) v.findViewById(R.id.name_info_window);
+                ImageView img = (ImageView) v.findViewById(R.id.img_info_window);
+                // Setting the latitude
+                LocationEntity obj = listLocation.getResultsLocation().get(index);
+                tv.setText(obj.getNameTH());
+                Bitmap imgBitmap = getBitmapFromURL(PATH + obj.getImageLocationFile());
+                if (imgBitmap != null) {
+                    img.setImageBitmap(imgBitmap);
+                } else {
+                    LinearLayout.LayoutParams layoutImgview = new LinearLayout.LayoutParams(80, 80);
+                    img.setLayoutParams(layoutImgview);
+                    img.setLayoutParams(layoutImgview);
+                    img.setImageResource(R.drawable.img_default);
+                }
+
+
+                Log.v("=>", PATH + obj.getImageLocationFile());
+                return v;
+
+            }
+        });
+
+    }
+
+    public static Bitmap getBitmapFromURL(String urlParams) {
+        Bitmap image = null;
+        try {
+
+            URL url = new URL(urlParams);
+            image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         Toast.makeText(this, "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
+//        marker.showInfoWindow();
         return false;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

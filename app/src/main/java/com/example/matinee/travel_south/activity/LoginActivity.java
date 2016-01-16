@@ -51,8 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
             FacebookSdk.sdkInitialize(getApplicationContext());
             setContentView(R.layout.activity_login);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+            SettingToobar();
             // Initialize layout button
             ImageButton fbbutton = (ImageButton) findViewById(R.id.login_fb_btn);
 
@@ -68,6 +67,20 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    private void SettingToobar() {
+        //Toolbar setting
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        this.setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Travel South");
+        } else {
+            Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Private method to handle Facebook login and callback
