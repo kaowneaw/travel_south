@@ -17,18 +17,21 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.callback.BitmapAjaxCallback;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Adapter.LocationAdapter;
+import com.example.matinee.travel_south.activity.Model.ImageLocation;
 import com.example.matinee.travel_south.activity.Model.Journey;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
@@ -56,6 +59,9 @@ public class LocationDescActivity extends AppCompatActivity {
     private LocationEntity location, locationIntent;
     private final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
     private LinearLayout contrainerJourney;
+    private ViewFlipper fliper;
+    private float lastX;
+    private AQuery aq = new AQuery(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +77,12 @@ public class LocationDescActivity extends AppCompatActivity {
 
     private void initialWidget() {
 
-        img_location_desc = (ImageView) findViewById(R.id.img_location_desc);
+        fliper = (ViewFlipper) findViewById(R.id.flipper);
+//      img_location_desc = (ImageView) findViewById(R.id.img_location_desc);
         address_desc = (TextView) findViewById(R.id.address_desc);
         tel_desc = (TextView) findViewById(R.id.tel_desc);
         contrainerJourney = (LinearLayout) findViewById(R.id.contrainerJourney);
+
     }
 
     private void SettingToobar() {
@@ -124,19 +132,13 @@ public class LocationDescActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                for (ImageLocation data : location.getListImage()) {
+                    //  This will create dynamic image view and add them to ViewFlipper
+                    setFlipperImage(data);
+                }
 
                 address_desc.setText(location.getAddressTH());
                 tel_desc.setText(location.getTel());
-                AQuery aq = new AQuery(getApplicationContext());
-                aq.id(img_location_desc).image(PATH + location.getImageLocationFile(), true, true, 0, 0,
-                        new BitmapAjaxCallback() {
-                            @Override
-                            public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status) {
-                                Drawable d = new BitmapDrawable(getResources(), bm);
-                                iv.setBackgroundDrawable(d);
-                            }
-                        }.header("User-Agent", "android"));
-
 
                 for (Journey jorney : location.getListJorney()) {
 
@@ -148,7 +150,7 @@ public class LocationDescActivity extends AppCompatActivity {
                     img.setLayoutParams(layoutImgview);
                     img.setBackgroundResource(R.drawable.car);
 
-                    TableRow.LayoutParams layout_gravity = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+                    TableRow.LayoutParams layout_gravity = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
                     layout_gravity.weight = 1.0f;
                     layout_gravity.gravity = Gravity.TOP;
 
@@ -202,4 +204,58 @@ public class LocationDescActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    private void setFlipperImage(ImageLocation res) {
+
+        ImageView image = new ImageView(getApplicationContext());
+
+        aq.id(image).image(PATH + res.getImageLocationFile(), true, true, 0, 0,
+                new BitmapAjaxCallback() {
+                    @Override
+                    public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status) {
+                        Drawable d = new BitmapDrawable(getResources(), bm);
+                        iv.setBackgroundDrawable(d);
+                    }
+                }.header("User-Agent", "android"));
+
+        fliper.addView(image);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent touchevent) {
+        switch (touchevent.getAction()) {
+            // when user first touches the screen to swap
+            case MotionEvent.ACTION_DOWN: {
+                lastX = touchevent.getX();
+                break;
+            }
+            case MotionEvent.ACTION_UP: {
+                float currentX = touchevent.getX();
+
+                // if left to right swipe on screen
+                if (lastX < currentX) {
+                    // If no more View/Child to flip
+                    if (fliper.getDisplayedChild() == 0)
+                        break;
+
+                    fliper.setInAnimation(this, R.anim.in_from_left);
+                    fliper.setOutAnimation(this, R.anim.out_to_right);
+                    // Show the next Screen
+                    fliper.showNext();
+                }
+
+                // if right to left swipe on screen
+                if (lastX > currentX) {
+                    if (fliper.getDisplayedChild() == 1)
+                        break;
+                    fliper.setInAnimation(this, R.anim.in_from_right);
+                    fliper.setOutAnimation(this, R.anim.out_to_left);
+                    // Show The Previous Screen
+                    fliper.showPrevious();
+                }
+                break;
+            }
+        }
+        return false;
+    }
 }

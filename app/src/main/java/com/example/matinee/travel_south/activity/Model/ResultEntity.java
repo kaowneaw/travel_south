@@ -7,10 +7,19 @@ import java.util.List;
  */
 public class ResultEntity {
 
+    private List<LocationRecomendEnity> resultsLocationRec;
     private List<LocationEntity> resultsLocation;
     private List<ProvinceEntity> resultsProvince;
     private List<String> results;
     boolean status;
+
+    public List<LocationRecomendEnity> getResultsLocationRec() {
+        return resultsLocationRec;
+    }
+
+    public void setResultsLocationRec(List<LocationRecomendEnity> resultsLocationRec) {
+        this.resultsLocationRec = resultsLocationRec;
+    }
 
     public List<LocationEntity> getResultsLocation() {
         return resultsLocation;

@@ -21,8 +21,9 @@ public class LocationEntity implements Parcelable {
     private int Province_id;
     private String ImageLocationFile;
     private List<Journey> listJorney;
+    private List<ImageLocation> listImage;
 
-    public LocationEntity(int location_id, String nameTH, String addressTH, String nameEng, String addressEng, String tel, float latitude, float longtitude, float distance, int type_id, int province_id, String imageLocationFile, List<Journey> listJorney) {
+    public LocationEntity(int location_id, String nameTH, String addressTH, String nameEng, String addressEng, String tel, float latitude, float longtitude, float distance, int type_id, int province_id, String imageLocationFile, List<Journey> listJorney, List<ImageLocation> listImage) {
 
         Location_id = location_id;
         NameTH = nameTH;
@@ -37,8 +38,28 @@ public class LocationEntity implements Parcelable {
         Province_id = province_id;
         ImageLocationFile = imageLocationFile;
         this.listJorney = listJorney;
+        this.listImage = listImage;
     }
 
+    public static final Creator<LocationEntity> CREATOR = new Creator<LocationEntity>() {
+        @Override
+        public LocationEntity createFromParcel(Parcel in) {
+            return new LocationEntity(in);
+        }
+
+        @Override
+        public LocationEntity[] newArray(int size) {
+            return new LocationEntity[size];
+        }
+    };
+
+    public List<ImageLocation> getListImage() {
+        return listImage;
+    }
+
+    public void setListImage(List<ImageLocation> listImage) {
+        this.listImage = listImage;
+    }
 
     public int getLocation_id() {
         return Location_id;
@@ -57,6 +78,10 @@ public class LocationEntity implements Parcelable {
     }
 
     public String getAddressTH() {
+
+        if (AddressTH.equals("")) {
+            return "-";
+        }
         return AddressTH;
     }
 
@@ -81,6 +106,9 @@ public class LocationEntity implements Parcelable {
     }
 
     public String getTel() {
+        if (Tel.equals("")) {
+            return "-";
+        }
         return Tel;
     }
 
@@ -185,13 +213,4 @@ public class LocationEntity implements Parcelable {
 
     }
 
-    public static final Parcelable.Creator<LocationEntity> CREATOR = new Parcelable.Creator<LocationEntity>() {
-        public LocationEntity createFromParcel(Parcel source) {
-            return new LocationEntity(source);
-        }
-
-        public LocationEntity[] newArray(int size) {
-            return new LocationEntity[size];
-        }
-    };
 }

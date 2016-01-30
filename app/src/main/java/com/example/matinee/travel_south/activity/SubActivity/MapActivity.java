@@ -59,6 +59,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
@@ -75,6 +77,8 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     private int locationType = 0;
     private GPSTracker gps;
     LocationEntity locationIntent;
+    ArrayList<Marker> listMarker = new ArrayList<>();
+    int markerIndex =0;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -148,15 +152,12 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
         }
 
         googleMap = mMapView.getMap();
-//      googleMap.setMyLocationEnabled(true);
+
         googleMap.setOnMarkerClickListener(this);
         maps_list.setOnClickListener(this);
         maps_nearBy.setOnClickListener(this);
         type_locationBT.setOnClickListener(this);
-//
-//        if (!callGPSTracker()) {
-//            this.gps.showSettingsAlert(); //show Dialog open GPS
-//        }
+
 
     }
 
@@ -249,6 +250,9 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     public void onClick(View v) {
         if (v == maps_list) {
             //Intent to list
+            Intent i = new Intent(this,LocationActivity.class);
+            i.putExtra("province_id",locationIntent.getProvince_id());
+            startActivity(i);
         } else if (v == maps_nearBy) {
             popupNearBy("Distance");
         } else if (v == type_locationBT) {
@@ -463,69 +467,75 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-//              for (LocationEntity location : listLocation.getResultsLocation()) {
-//                    setMarker(location);
-//               }
+
                 for (int i = 0; i < listLocation.getResultsLocation().size(); i++) {
                     setMarker(listLocation.getResultsLocation().get(i), i);
                 }
+
+                // Setting a custom info window adapter for the google map
+                googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                    final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
+
+                    // Use default InfoWindow frame
+                    @Override
+                    public View getInfoWindow(Marker arg0) {
+                        return null;
+                    }
+
+                    // Defines the contents of the InfoWindow
+                    @Override
+                    public View getInfoContents(Marker arg0) {
+
+                        // Getting view from the layout file info_window_layout
+                        View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+
+                        int index = Integer.parseInt(arg0.getTitle());
+
+                        TextView tv = (TextView) v.findViewById(R.id.name_info_window);
+                        ImageView img = (ImageView) v.findViewById(R.id.img_info_window);
+                        // Setting the latitude
+                        LocationEntity obj = listLocation.getResultsLocation().get(index);
+                        tv.setText(obj.getNameTH());
+                        Bitmap imgBitmap = getBitmapFromURL(PATH + obj.getImageLocationFile());
+                        if (imgBitmap != null) {
+                            img.setImageBitmap(imgBitmap);
+                        } else {
+                            LinearLayout.LayoutParams layoutImgview = new LinearLayout.LayoutParams(80, 80);
+                            img.setLayoutParams(layoutImgview);
+                            img.setLayoutParams(layoutImgview);
+                            img.setImageResource(R.drawable.img_default);
+                        }
+
+                        Log.v("=>", PATH + obj.getImageLocationFile());
+                        return v;
+                    }
+
+                });
+                listMarker.get(markerIndex).showInfoWindow();
+
             }
         }.execute();
     }
 
     private void setMarker(LocationEntity data, int index) {
-
+        Marker marker = null;
         if (data.getType_id() == 10) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
+            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
         } else if (data.getType_id() == 20) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
+            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
         } else if (data.getType_id() == 30) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
+            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
         }
-
-        // Setting a custom info window adapter for the google map
-        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
-
-            // Use default InfoWindow frame
-            @Override
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            // Defines the contents of the InfoWindow
-            @Override
-            public View getInfoContents(Marker arg0) {
-
-                // Getting view from the layout file info_window_layout
-                View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
-
-                int index = Integer.parseInt(arg0.getTitle());
-
-                TextView tv = (TextView) v.findViewById(R.id.name_info_window);
-                ImageView img = (ImageView) v.findViewById(R.id.img_info_window);
-                // Setting the latitude
-                LocationEntity obj = listLocation.getResultsLocation().get(index);
-                tv.setText(obj.getNameTH());
-                Bitmap imgBitmap = getBitmapFromURL(PATH + obj.getImageLocationFile());
-                if (imgBitmap != null) {
-                    img.setImageBitmap(imgBitmap);
-                } else {
-                    LinearLayout.LayoutParams layoutImgview = new LinearLayout.LayoutParams(80, 80);
-                    img.setLayoutParams(layoutImgview);
-                    img.setLayoutParams(layoutImgview);
-                    img.setImageResource(R.drawable.img_default);
-                }
-
-
-                Log.v("=>", PATH + obj.getImageLocationFile());
-                return v;
-
-            }
-        });
-
+        if(marker != null) listMarker.add(marker);
+        if( locationIntent.getLatitude() == data.getLatitude() && locationIntent.getLongtitude() == data.getLongtitude()){
+            if(marker != null)
+                markerIndex = index;
+        }
     }
+
+
+
 
     public static Bitmap getBitmapFromURL(String urlParams) {
         Bitmap image = null;
@@ -543,7 +553,6 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     @Override
     public boolean onMarkerClick(Marker marker) {
         Toast.makeText(this, "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
-//        marker.showInfoWindow();
         return false;
     }
 

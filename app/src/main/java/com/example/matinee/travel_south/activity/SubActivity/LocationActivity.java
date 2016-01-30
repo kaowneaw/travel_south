@@ -133,6 +133,7 @@ public class LocationActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
 
             callService(arrTypeLocation[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            Log.d("onCreate", "<>");
         }
 
         @Override
@@ -140,7 +141,7 @@ public class LocationActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_location, container, false);
             status = (TextView) rootView.findViewById(R.id.status);
             lv_location = (ListView) rootView.findViewById(R.id.lv_location);
-
+            Log.d("onCreateView", "<>");
             return rootView;
         }
 

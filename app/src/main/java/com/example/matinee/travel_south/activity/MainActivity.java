@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.SubActivity.ProvinceActivity;
+import com.example.matinee.travel_south.activity.SubActivity.RecommendActivity;
 import com.example.matinee.travel_south.activity.Utill.UserPreference;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v == btHome_travel) {
             startActivity(new Intent(this, ProvinceActivity.class));
         } else if (v == btHome_rec) {
-
+            startActivity(new Intent(this, RecommendActivity.class));
         } else if (v == btHome_checkin) {
 
         }
