@@ -10,6 +10,7 @@ public class ResultEntity {
     private List<LocationRecomendEnity> resultsLocationRec;
     private List<LocationEntity> resultsLocation;
     private List<ProvinceEntity> resultsProvince;
+    private List<FeedEntity> resultsFeed;
     private List<String> results;
     boolean status;
 
@@ -51,5 +52,13 @@ public class ResultEntity {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public List<FeedEntity> getResultsFeed() {
+        return resultsFeed;
+    }
+
+    public void setResultsFeed(List<FeedEntity> resultsFeed) {
+        this.resultsFeed = resultsFeed;
     }
 }

@@ -12,6 +12,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -64,6 +65,12 @@
         <activity
             android:name=".activity.SubActivity.RecommendActivity"
             android:label="@string/title_activity_recommend"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.SubActivity.CheckInActivity" />
+        <activity android:name=".activity.SubActivity.PostActivity" />
+        <activity
+            android:name=".activity.SubActivity.SelectLocationActivity"
+            android:label="@string/title_activity_select_location"
             android:theme="@style/AppTheme"></activity>
     </application>
 

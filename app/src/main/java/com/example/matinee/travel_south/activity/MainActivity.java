@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
+import com.example.matinee.travel_south.activity.SubActivity.CheckInActivity;
 import com.example.matinee.travel_south.activity.SubActivity.ProvinceActivity;
 import com.example.matinee.travel_south.activity.SubActivity.RecommendActivity;
 import com.example.matinee.travel_south.activity.Utill.UserPreference;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v == btHome_rec) {
             startActivity(new Intent(this, RecommendActivity.class));
         } else if (v == btHome_checkin) {
-
+            startActivity(new Intent(this, CheckInActivity.class));
         }
     }
 }

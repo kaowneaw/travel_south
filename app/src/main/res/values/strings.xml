@@ -20,5 +20,6 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_location_desc">LocationDescActivity</string>
     <string name="title_activity_recommend">RecommendActivity</string>
+    <string name="title_activity_select_location">SelectLocationActivity</string>
 
 </resources>
