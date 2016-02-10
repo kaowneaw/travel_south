@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/home"
+            android:icon="@mipmap/home"
             android:title="Home" />
         <item
             android:id="@+id/nav_profile"
@@ -12,15 +12,15 @@
             android:title="Profile" />
         <item
             android:id="@+id/nav_review"
-            android:icon="@drawable/searchreview"
+            android:icon="@mipmap/searchreview"
             android:title="Review" />
         <item
             android:id="@+id/nav_maps"
-            android:icon="@drawable/maps"
+            android:icon="@mipmap/maps"
             android:title="Maps" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/power"
+            android:icon="@mipmap/power"
             android:title="Logout" />
     </group>
 

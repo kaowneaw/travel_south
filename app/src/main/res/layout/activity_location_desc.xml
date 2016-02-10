@@ -47,7 +47,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/marker" />
+                    android:background="@mipmap/marker" />
 
                 <TextView
                     android:id="@+id/address_desc"
@@ -71,7 +71,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/tel" />
+                    android:background="@mipmap/tel" />
 
                 <TextView
                     android:id="@+id/tel_desc"

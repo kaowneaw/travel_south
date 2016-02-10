@@ -49,7 +49,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_weight="30"
-            android:src="@drawable/loacte_natural_select" />
+            android:src="@mipmap/loacte_natural_select" />
 
         <TextView
             android:id="@+id/title_natural"
@@ -81,7 +81,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_weight="30"
-            android:src="@drawable/loacte_culture_select" />
+            android:src="@mipmap/loacte_culture_select" />
 
         <TextView
             android:id="@+id/title_culture"
@@ -113,7 +113,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_weight="30"
-            android:src="@drawable/loacte_hotel_select" />
+            android:src="@mipmap/loacte_hotel_select" />
 
         <TextView
             android:id="@+id/title_hotel"

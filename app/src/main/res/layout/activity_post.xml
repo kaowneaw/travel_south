@@ -20,8 +20,8 @@
         <ImageView
             android:id="@+id/img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="260dp" />
+            android:layout_height="180dp"
+            android:maxHeight="150dp" />
 
     </RelativeLayout>
 
@@ -36,7 +36,7 @@
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:background="@drawable/marker" />
+            android:background="@mipmap/marker" />
 
         <TextView
             android:id="@+id/locationName"

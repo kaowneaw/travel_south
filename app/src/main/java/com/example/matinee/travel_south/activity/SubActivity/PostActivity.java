@@ -1,9 +1,13 @@
 package com.example.matinee.travel_south.activity.SubActivity;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -78,12 +82,16 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             this.finish();
         } else if (id == R.id.post) {
 
-            Toast.makeText(getApplicationContext(), "Post", Toast.LENGTH_SHORT).show();
-            String content = this.content.getText().toString();
-//            Log.v("path=>", getRealPathFromURI(this, srcImage) + " <");
-//            Log.v("path=>", srcImage.getPath());
-            File imgFile = new File(realPath);
-            callService(content, imgFile);//posting
+            if (this.location != null && realPath != null) {
+                String content = this.content.getText().toString();
+                File imgFile = new File(realPath);
+                Toast.makeText(getApplicationContext(), realPath, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), imgFile.toString(), Toast.LENGTH_LONG).show();
+                Log.v("imgFile", imgFile.toString());
+                callService(content, imgFile);//posting
+            } else {
+                Toast.makeText(getApplicationContext(), "Plese Select Location", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -131,32 +139,53 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(cameraIntent, CAMERA);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GALLERY) {
 
             if (resultCode == RESULT_OK) {
                 if (data != null) {
-                    try {
+//                    try {
+//                        Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+//                        img.setImageBitmap(image);
+//                        // SDK < API11
+//                        if (Build.VERSION.SDK_INT < 11)
+//                            realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
+//
+//                            // SDK >= 11 && SDK < 19
+//                        else if (Build.VERSION.SDK_INT < 19)
+//                            realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
+//
+//                            // SDK > 19 (Android 4.4)
+//                        else
+//                            realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
+//
+//
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize = 4;
+                    Uri selectedImageUri = data.getData();
+                    realPath = getPath(selectedImageUri);
+                    Bitmap bitmap = BitmapFactory.decodeFile(realPath);
+                    int height = bitmap.getHeight(), width = bitmap.getWidth();
 
-                        Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                        img.setImageBitmap(image);
-                        // SDK < API11
-                        if (Build.VERSION.SDK_INT < 11)
-                            realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
+                    if (height > 1280 && width > 960) {
+                        Bitmap imgbitmap = BitmapFactory.decodeFile(realPath, options);
+                        Drawable d = new BitmapDrawable(getResources(), imgbitmap);
+                        img.setBackground(d);
 
-                            // SDK >= 11 && SDK < 19
-                        else if (Build.VERSION.SDK_INT < 19)
-                            realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
+                        System.out.println("Need to resize");
 
-                            // SDK > 19 (Android 4.4)
-                        else
-                            realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
+                    } else {
 
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        img.setBackground(d);
+                        System.out.println("WORKS");
                     }
+
                 }
             } else if (resultCode == RESULT_CANCELED) {
 
@@ -190,7 +219,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void callService(final String content, final File src) {
+    private void callService(final String mycontent, final File src) {
 
         final ProgressDialog dialog = new ProgressDialog(this);
 
@@ -215,7 +244,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
                 RequestBody requestBody = new MultipartBuilder()
                         .type(MultipartBuilder.FORM)
-                        .addFormDataPart("content", content)
+                        .addFormDataPart("content", mycontent)
                         .addFormDataPart("locationId", location.getLocation_id() + "")
                         .addFormDataPart("memberId", "1")//memberid
                         .addFormDataPart("myfile", src.getName(), RequestBody.create(MEDIA_TYPE_PNG, reduceSizeFile(src)))
@@ -263,7 +292,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             // BitmapFactory options to downsize the image
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
-            o.inSampleSize = 6;
+            o.inSampleSize = 4;
             // factor of downsizing the image
 
             FileInputStream inputStream = new FileInputStream(file);
@@ -292,12 +321,35 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             file.createNewFile();
             FileOutputStream outputStream = new FileOutputStream(file);
 
-            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
 
             return file;
+
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * helper to retrieve the path of an image URI
+     */
+    public String getPath(Uri uri) {
+        // just some safety built in
+        if (uri == null) {
+            // TODO perform some logging or show user feedback
+            return null;
+        }
+        // try to retrieve the image from the media store first
+        // this will only work for images selected from gallery
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        // this is our fallback here
+        return uri.getPath();
     }
 
 

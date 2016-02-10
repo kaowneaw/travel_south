@@ -1,15 +1,20 @@
 package com.example.matinee.travel_south.activity.Adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.FeedEntity;
 
@@ -68,7 +73,18 @@ public class CheckInAdapter extends BaseAdapter {
         aq = new AQuery(convertView);
         Holder.feed_location.setText(listFeed.get(position).getNameTH());
         Holder.content.setText(listFeed.get(position).getContent());
-        aq.id(Holder.feed_img).image(path + listFeed.get(position).getImg());
+        aq.ajax(path + listFeed.get(position).getImg(), Bitmap.class, 0, new AjaxCallback<Bitmap>() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void callback(String url, Bitmap object, AjaxStatus status) {
+                super.callback(url, object, status);
+
+                //You will get Bitmap from object.
+                Drawable d = new BitmapDrawable(context.getResources(), object);
+                Holder.feed_img.setBackground(d);
+            }
+
+        });
 
         return convertView;
     }

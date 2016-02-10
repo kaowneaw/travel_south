@@ -78,7 +78,7 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     private GPSTracker gps;
     LocationEntity locationIntent;
     ArrayList<Marker> listMarker = new ArrayList<>();
-    int markerIndex =0;
+    int markerIndex = 0;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -250,8 +250,8 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     public void onClick(View v) {
         if (v == maps_list) {
             //Intent to list
-            Intent i = new Intent(this,LocationActivity.class);
-            i.putExtra("province_id",locationIntent.getProvince_id());
+            Intent i = new Intent(this, LocationActivity.class);
+            i.putExtra("province_id", locationIntent.getProvince_id());
             startActivity(i);
         } else if (v == maps_nearBy) {
             popupNearBy("Distance");
@@ -504,7 +504,7 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
                             LinearLayout.LayoutParams layoutImgview = new LinearLayout.LayoutParams(80, 80);
                             img.setLayoutParams(layoutImgview);
                             img.setLayoutParams(layoutImgview);
-                            img.setImageResource(R.drawable.img_default);
+                            img.setImageResource(R.mipmap.img_default);
                         }
 
                         Log.v("=>", PATH + obj.getImageLocationFile());
@@ -521,20 +521,18 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
     private void setMarker(LocationEntity data, int index) {
         Marker marker = null;
         if (data.getType_id() == 10) {
-            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_natural_select)));
+            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.loacte_natural_select)));
         } else if (data.getType_id() == 20) {
-            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_culture_select)));
+            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.loacte_culture_select)));
         } else if (data.getType_id() == 30) {
-            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.drawable.loacte_hotel_select)));
+            marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(data.getLatitude(), data.getLongtitude())).title(String.valueOf(index)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.loacte_hotel_select)));
         }
-        if(marker != null) listMarker.add(marker);
-        if( locationIntent.getLatitude() == data.getLatitude() && locationIntent.getLongtitude() == data.getLongtitude()){
-            if(marker != null)
+        if (marker != null) listMarker.add(marker);
+        if (locationIntent.getLatitude() == data.getLatitude() && locationIntent.getLongtitude() == data.getLongtitude()) {
+            if (marker != null)
                 markerIndex = index;
         }
     }
-
-
 
 
     public static Bitmap getBitmapFromURL(String urlParams) {

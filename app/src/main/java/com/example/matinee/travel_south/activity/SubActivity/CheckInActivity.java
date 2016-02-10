@@ -196,7 +196,6 @@ public class CheckInActivity extends AppCompatActivity implements View.OnClickLi
                 Request request = new Request.Builder()
                         .url(url)
                         .build();
-
                 try {
 
                     Gson gson = new Gson();

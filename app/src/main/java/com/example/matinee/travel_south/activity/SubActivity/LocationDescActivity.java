@@ -148,7 +148,7 @@ public class LocationDescActivity extends AppCompatActivity {
                     TableRow.LayoutParams layoutImgview = new TableRow.LayoutParams(80, 80);
                     img.setLayoutParams(layoutImgview);
                     img.setLayoutParams(layoutImgview);
-                    img.setBackgroundResource(R.drawable.car);
+                    img.setBackgroundResource(R.mipmap.car);
 
                     TableRow.LayoutParams layout_gravity = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
                     layout_gravity.weight = 1.0f;
