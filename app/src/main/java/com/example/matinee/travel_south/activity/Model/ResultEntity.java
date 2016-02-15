@@ -11,8 +11,18 @@ public class ResultEntity {
     private List<LocationEntity> resultsLocation;
     private List<ProvinceEntity> resultsProvince;
     private List<FeedEntity> resultsFeed;
+    private List<FestivalEntity> resultsFestival;
     private List<String> results;
     boolean status;
+
+
+    public List<FestivalEntity> getResultsFestival() {
+        return resultsFestival;
+    }
+
+    public void setResultsFestival(List<FestivalEntity> resultsFestival) {
+        this.resultsFestival = resultsFestival;
+    }
 
     public List<LocationRecomendEnity> getResultsLocationRec() {
         return resultsLocationRec;

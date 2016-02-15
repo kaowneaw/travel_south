@@ -4,20 +4,18 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Adapter.RecommendAdapter;
-import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.LocationRecomendEnity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.google.gson.Gson;
@@ -28,7 +26,9 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.List;
 
+
 public class RecommendActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
     private List<LocationRecomendEnity> listRec;
     private ListView lv_recomend;
 
@@ -44,6 +44,14 @@ public class RecommendActivity extends AppCompatActivity implements AdapterView.
     private void initWidget() {
         lv_recomend = (ListView) findViewById(R.id.lv_recomend);
         lv_recomend.setOnItemClickListener(this);
+        Button festival = (Button) findViewById(R.id.festival);
+        festival.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), FestivalActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void SettingToolbar() {
@@ -57,7 +65,6 @@ public class RecommendActivity extends AppCompatActivity implements AdapterView.
         } else {
             Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

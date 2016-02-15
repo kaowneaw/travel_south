@@ -1,9 +1,11 @@
 package com.example.matinee.travel_south.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +16,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
+import com.example.matinee.travel_south.activity.Adapter.CheckInAdapter;
+import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.example.matinee.travel_south.activity.Utill.UserPreference;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -23,10 +27,17 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.gson.Gson;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -38,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     // Creating Facebook CallbackManager Value
     public static CallbackManager callbackmanager;
     private LoginActivity THIS = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         this.setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
-            this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
             getSupportActionBar().setTitle("Travel South");
         } else {
             Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();
@@ -108,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                                             String email = object.getString("email");
                                             UserPreference pref = new UserPreference(getApplicationContext(), id, name, email);//Facebook not have username and password
                                             if (pref.commit()) {
+                                                callService(id, name, email);
                                                 Intent toMain = new Intent(getApplicationContext(), MainActivity.class);
                                                 toMain.putExtra("name", name);
                                                 toMain.putExtra("email", email);
@@ -149,7 +162,6 @@ public class LoginActivity extends AppCompatActivity {
         callbackmanager.onActivityResult(requestCode, resultCode, data);
     }
 
-
     private void getKeyHash() {
 
         PackageInfo info;
@@ -170,6 +182,68 @@ public class LoginActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("exception", e.toString());
         }
+    }
+
+
+    private void callService(final String memberId, final String memberName, final String memberEmail) {
+
+        final ProgressDialog dialog = new ProgressDialog(this);
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog.setMessage("Loading...");
+                dialog.show();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                String url = "http://www.jaa-ikuzo.com/tvs/increseMember.php";
+                OkHttpClient client = new OkHttpClient();
+
+                RequestBody formBody = new FormEncodingBuilder()
+                        .add("memberId", memberId)
+                        .add("memberName", memberName)
+                        .add("memberEmail", memberEmail)
+                        .build();
+
+                Log.v("memberName =>", memberName);
+                Log.v("memberEmail =>", memberEmail);
+
+                Request request = new Request.Builder()
+                        .post(formBody)
+                        .url(url)
+                        .build();
+                try {
+
+                    Gson gson = new Gson();
+                    Response response = client.newCall(request).execute();
+                    String reponse = response.body().string();
+                    Log.v("=>", reponse);
+                    ResultEntity results = gson.fromJson(reponse, ResultEntity.class);
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+
+        }.execute();
     }
 
 

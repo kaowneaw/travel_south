@@ -71,7 +71,8 @@
         <activity
             android:name=".activity.SubActivity.SelectLocationActivity"
             android:label="@string/title_activity_select_location"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.SubActivity.FestivalActivity"></activity>
     </application>
 
 </manifest>

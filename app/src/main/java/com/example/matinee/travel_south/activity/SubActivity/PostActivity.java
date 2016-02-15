@@ -29,6 +29,7 @@ import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.example.matinee.travel_south.activity.Utill.RealPathUtil;
+import com.example.matinee.travel_south.activity.Utill.UserPreference;
 import com.google.gson.Gson;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
@@ -222,6 +223,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private void callService(final String mycontent, final File src) {
 
         final ProgressDialog dialog = new ProgressDialog(this);
+        final UserPreference pref = new UserPreference(this);
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -241,12 +243,13 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 client.setReadTimeout(60, TimeUnit.SECONDS);    // socket tim
 
                 final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+                String memberId = pref.getUserID();
 
                 RequestBody requestBody = new MultipartBuilder()
                         .type(MultipartBuilder.FORM)
                         .addFormDataPart("content", mycontent)
                         .addFormDataPart("locationId", location.getLocation_id() + "")
-                        .addFormDataPart("memberId", "1")//memberid
+                        .addFormDataPart("memberId", memberId)//memberid
                         .addFormDataPart("myfile", src.getName(), RequestBody.create(MEDIA_TYPE_PNG, reduceSizeFile(src)))
                         .build();
 

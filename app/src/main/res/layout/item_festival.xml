@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="140dp"
+            android:layout_height="100dp"
+            android:paddingLeft="8dp">
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="45dip"
+                android:layout_height="45dip"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/img_fes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:padding="6dp">
+
+            <TextView
+                android:id="@+id/fes_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Text"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TableRow
+                android:id="@+id/fes_monthrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fes_name"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:background="@mipmap/time" />
+
+                <TextView
+                    android:id="@+id/fes_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4dp"
+                    android:ellipsize="end"
+                    android:text="Text Month"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fes_monthrow"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
+
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:background="@mipmap/marker" />
+
+                <TextView
+                    android:id="@+id/fes_locate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="4dp"
+                    android:ellipsize="end"
+                    android:text="Text Desc"
+                    android:textColor="@android:color/tertiary_text_dark"
+                    android:textSize="12sp" />
+
+            </TableRow>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fes_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:padding="5dp"
+        android:textColor="@android:color/tertiary_text_dark"
+        android:textSize="12sp" />
+
+
+</LinearLayout>

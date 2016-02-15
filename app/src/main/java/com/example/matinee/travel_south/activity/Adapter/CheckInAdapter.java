@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
@@ -61,8 +62,10 @@ public class CheckInAdapter extends BaseAdapter {
             Holder = new widgetHolder();
             convertView = inflater.inflate(R.layout.item_checkin, null);
             Holder.content = (TextView) convertView.findViewById(R.id.content);
+            Holder.user_name = (TextView) convertView.findViewById(R.id.user_name);
             Holder.feed_img = (ImageView) convertView.findViewById(R.id.feed_img);
             Holder.feed_location = (TextView) convertView.findViewById(R.id.feed_location);
+            Holder.img_profile = (ImageView) convertView.findViewById(R.id.img_profile);
             convertView.setTag(Holder);
 
         } else {
@@ -72,18 +75,18 @@ public class CheckInAdapter extends BaseAdapter {
 
         aq = new AQuery(convertView);
         Holder.feed_location.setText(listFeed.get(position).getNameTH());
+        Holder.user_name.setText(listFeed.get(position).getMember_name());
         Holder.content.setText(listFeed.get(position).getContent());
+        aq.id(Holder.img_profile).image("https://graph.facebook.com/" + listFeed.get(position).getMember_id() + "/picture");
         aq.ajax(path + listFeed.get(position).getImg(), Bitmap.class, 0, new AjaxCallback<Bitmap>() {
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void callback(String url, Bitmap object, AjaxStatus status) {
                 super.callback(url, object, status);
-
                 //You will get Bitmap from object.
                 Drawable d = new BitmapDrawable(context.getResources(), object);
                 Holder.feed_img.setBackground(d);
             }
-
         });
 
         return convertView;
@@ -94,5 +97,7 @@ public class CheckInAdapter extends BaseAdapter {
         ImageView feed_img;
         TextView feed_location;
         TextView content;
+        TextView user_name;
+        ImageView img_profile;
     }
 }

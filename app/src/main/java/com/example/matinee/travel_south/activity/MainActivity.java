@@ -13,8 +13,10 @@ import android.widget.Toast;
 
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.SubActivity.CheckInActivity;
+import com.example.matinee.travel_south.activity.SubActivity.MenuActivity;
 import com.example.matinee.travel_south.activity.SubActivity.ProvinceActivity;
 import com.example.matinee.travel_south.activity.SubActivity.RecommendActivity;
+import com.example.matinee.travel_south.activity.SubActivity.SelectLocationActivity;
 import com.example.matinee.travel_south.activity.Utill.UserPreference;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -72,12 +74,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(getApplicationContext(), "Menu", Toast.LENGTH_SHORT).show();
-            return true;
+        if (id == R.id.search_location) {
+
+            startActivity(new Intent(this, SelectLocationActivity.class));
+
+        } else if (id == R.id.menu) {
+            startActivity(new Intent(this, MenuActivity.class));
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override

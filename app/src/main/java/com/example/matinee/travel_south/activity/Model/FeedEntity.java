@@ -7,10 +7,11 @@ import android.os.Parcelable;
  * Created by KaowNeaw on 2/1/2016.
  */
 public class FeedEntity implements Parcelable {
-    
+
     private int Feeds_id;
-    private int Member_id;
+    private String Member_id;
     private int Location_id;
+    private String Member_name;
     private String Content;
     private String Img;
     private String Date_time;
@@ -25,11 +26,11 @@ public class FeedEntity implements Parcelable {
     private int Province_id;
     private String Website;
 
-    public FeedEntity(int feeds_id, int member_id, int location_id, String content, String img, String date_time, String nameTH, String addressTH, String nameEng, String addressEng, String tel, double latitude, double longtitude, int type_id, int province_id, String website) {
-
+    public FeedEntity(int feeds_id, String member_id, int location_id, String member_name, String content, String img, String date_time, String nameTH, String addressTH, String nameEng, String addressEng, String tel, double latitude, double longtitude, int type_id, int province_id, String website) {
         Feeds_id = feeds_id;
         Member_id = member_id;
         Location_id = location_id;
+        Member_name = member_name;
         Content = content;
         Img = img;
         Date_time = date_time;
@@ -54,11 +55,11 @@ public class FeedEntity implements Parcelable {
         Feeds_id = feeds_id;
     }
 
-    public int getMember_id() {
+    public String getMember_id() {
         return Member_id;
     }
 
-    public void setMember_id(int member_id) {
+    public void setMember_id(String member_id) {
         Member_id = member_id;
     }
 
@@ -68,6 +69,14 @@ public class FeedEntity implements Parcelable {
 
     public void setLocation_id(int location_id) {
         Location_id = location_id;
+    }
+
+    public String getMember_name() {
+        return Member_name;
+    }
+
+    public void setMember_name(String member_name) {
+        Member_name = member_name;
     }
 
     public String getContent() {
@@ -182,8 +191,9 @@ public class FeedEntity implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.Feeds_id);
-        dest.writeInt(this.Member_id);
+        dest.writeString(this.Member_id);
         dest.writeInt(this.Location_id);
+        dest.writeString(this.Member_name);
         dest.writeString(this.Content);
         dest.writeString(this.Img);
         dest.writeString(this.Date_time);
@@ -200,10 +210,10 @@ public class FeedEntity implements Parcelable {
     }
 
     protected FeedEntity(Parcel in) {
-
         this.Feeds_id = in.readInt();
-        this.Member_id = in.readInt();
+        this.Member_id = in.readString();
         this.Location_id = in.readInt();
+        this.Member_name = in.readString();
         this.Content = in.readString();
         this.Img = in.readString();
         this.Date_time = in.readString();
@@ -219,7 +229,7 @@ public class FeedEntity implements Parcelable {
         this.Website = in.readString();
     }
 
-    public static final Parcelable.Creator<FeedEntity> CREATOR = new Parcelable.Creator<FeedEntity>() {
+    public static final Creator<FeedEntity> CREATOR = new Creator<FeedEntity>() {
         public FeedEntity createFromParcel(Parcel source) {
             return new FeedEntity(source);
         }
@@ -228,6 +238,4 @@ public class FeedEntity implements Parcelable {
             return new FeedEntity[size];
         }
     };
-
-
 }

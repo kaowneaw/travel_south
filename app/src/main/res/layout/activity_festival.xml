@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.matinee.travel_south.activity.SubActivity.MenuActivity">
+    tools:context="com.example.matinee.travel_south.activity.SubActivity.FestivalActivity">
 
     <include
         android:id="@+id/app_bar"
@@ -12,27 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+
     <TableRow
-        android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="10dp">
-
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@mipmap/setting" />
+        android:padding="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="LogOut"
-            android:textColor="@android:color/black" />
+            android:text="เดือน : "
+            android:textColor="@android:color/background_dark" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
 
     </TableRow>
 
+
+    <ListView
+        android:id="@+id/lv_festival"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

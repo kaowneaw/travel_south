@@ -61,6 +61,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MapActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
@@ -158,7 +159,43 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
         maps_nearBy.setOnClickListener(this);
         type_locationBT.setOnClickListener(this);
 
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(final Marker marker) {
+                intentGoToGmap(marker);
 
+            }
+        });
+
+    }
+
+    protected void intentGoToGmap(final Marker marker) {
+
+        new AlertDialog.Builder(this)
+                .setTitle("นำทาง")
+                .setMessage("ต้องการนำทางไปที่นี่ใช้หรือไม่")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        int index = Integer.parseInt(marker.getTitle());
+                        LocationEntity obj = listLocation.getResultsLocation().get(index);
+                        double latitude = obj.getLatitude();
+                        double longitude = obj.getLongtitude();
+                        String label = "ABC Label";
+                        String uriBegin = "geo:" + latitude + "," + longitude;
+                        String query = latitude + "," + longitude + "(" + label + ")";
+                        String encodedQuery = Uri.encode(query);
+                        String uriString = uriBegin + "?q=" + encodedQuery + "&z=16";
+                        Uri uri = Uri.parse(uriString);
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     @Override
@@ -550,7 +587,22 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Toast.makeText(this, "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
+
+        int index = Integer.parseInt(marker.getTitle());
+
+//        Toast.makeText(this, "" + listLocation.getResultsLocation().get(index).getAddressTH(), Toast.LENGTH_SHORT).show();
+//        LocationEntity obj = listLocation.getResultsLocation().get(index);
+//        double latitude = obj.getLatitude();
+//        double longitude = obj.getLongtitude();
+//        String label = "ABC Label";
+//        String uriBegin = "geo:" + latitude + "," + longitude;
+//        String query = latitude + "," + longitude + "(" + label + ")";
+//        String encodedQuery = Uri.encode(query);
+//        String uriString = uriBegin + "?q=" + encodedQuery + "&z=16";
+//        Uri uri = Uri.parse(uriString);
+//        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
+//        startActivity(intent);
+
         return false;
     }
 
