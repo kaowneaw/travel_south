@@ -38,48 +38,47 @@
             android:layout_weight="50"
             android:orientation="vertical">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp">
+            <!--<TableRow-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingLeft="30dp"-->
+            <!--android:paddingRight="30dp">-->
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="25dp"
-                    android:background="@mipmap/email" />
+            <!--<ImageView-->
+            <!--android:layout_width="28dp"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:background="@mipmap/email" />-->
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:hint="Email Address" />
+            <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:hint="Email Address" />-->
 
-            </TableRow>
+            <!--</TableRow>-->
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp">
+            <!--<TableRow-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingLeft="30dp"-->
+            <!--android:paddingRight="30dp">-->
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="25dp"
-                    android:background="@mipmap/pass_icon" />
+            <!--<ImageView-->
+            <!--android:layout_width="28dp"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:background="@mipmap/pass_icon" />-->
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:hint="Password"
-                    android:inputType="textPassword" />
+            <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:hint="Password"-->
+            <!--android:inputType="textPassword" />-->
 
-            </TableRow>
-
+            <!--</TableRow>-->
 
             <ImageButton
                 android:id="@+id/login_fb_btn"

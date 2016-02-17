@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableRow;
@@ -30,6 +31,16 @@ import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.example.matinee.travel_south.activity.Utill.RealPathUtil;
 import com.example.matinee.travel_south.activity.Utill.UserPreference;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.share.ShareApi;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 import com.google.gson.Gson;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
@@ -42,6 +53,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
@@ -56,6 +69,9 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private TextView locationName;
     private Uri srcImage;
     String realPath;
+    private CallbackManager callbackManager;
+    private LoginManager manager;
+    private CheckBox isShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +85,45 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             openCamera();
         }
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
     }
+
+    private void publishImage() {
+
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+        Bitmap image = BitmapFactory.decodeFile(realPath, bmOptions);
+
+        SharePhoto photo = new SharePhoto.Builder().setBitmap(image).setCaption(this.content.getText().toString()).build();
+
+        SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
+
+        Toast.makeText(getApplicationContext(), "Uploading....", Toast.LENGTH_SHORT).show();
+
+        ShareApi.share(content, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+
+                Toast.makeText(getApplicationContext(), "ShareSuccess", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+                Log.v("FACEBOOK_TEST", "share api cancel");
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+                Log.v("FACEBOOK_TEST", "share api error " + e);
+            }
+        });
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -86,10 +140,37 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             if (this.location != null && realPath != null) {
                 String content = this.content.getText().toString();
                 File imgFile = new File(realPath);
-                Toast.makeText(getApplicationContext(), realPath, Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), imgFile.toString(), Toast.LENGTH_LONG).show();
                 Log.v("imgFile", imgFile.toString());
                 callService(content, imgFile);//posting
+
+                if (isShare.isChecked()) {
+
+                    callbackManager = CallbackManager.Factory.create();
+
+                    List<String> permissionNeeds = Arrays.asList("publish_actions");
+
+                    manager = LoginManager.getInstance();
+
+                    manager.logInWithPublishPermissions(this, permissionNeeds);
+
+                    manager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            publishImage();
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            System.out.println("onCancel");
+                        }
+
+                        @Override
+                        public void onError(FacebookException exception) {
+                            System.out.println("onError");
+                            exception.printStackTrace();
+                        }
+                    });
+                }
             } else {
                 Toast.makeText(getApplicationContext(), "Plese Select Location", Toast.LENGTH_SHORT).show();
             }
@@ -97,6 +178,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,6 +203,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initWidget() {
 
+        isShare = (CheckBox) findViewById(R.id.isShare);
         img = (ImageView) findViewById(R.id.img);
         content = (EditText) findViewById(R.id.content);
         TableRow checkinLocation = (TableRow) findViewById(R.id.checkinLocation);
@@ -143,6 +226,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == GALLERY) {
 
             if (resultCode == RESULT_OK) {
@@ -208,6 +292,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 location = data.getParcelableExtra("locationObj");
                 locationName.setText(location.getNameTH());
             }
+        } else {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -266,7 +352,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                     Log.v("result=>", reponse);
                     ResultEntity results = gson.fromJson(reponse, ResultEntity.class);
                     if (results.isStatus()) {
-                        finish();
+
+
                     }
 
                 } catch (IOException e) {
@@ -283,9 +370,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
+
+                if (!isShare.isChecked()) {
+                    finish();
+                }
             }
         }.execute();
-
 
     }
 
@@ -324,7 +414,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             file.createNewFile();
             FileOutputStream outputStream = new FileOutputStream(file);
 
-            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
 
             return file;
 
