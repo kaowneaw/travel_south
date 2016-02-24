@@ -12,6 +12,7 @@ import com.androidquery.AQuery;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ProvinceEntity;
+import com.example.matinee.travel_south.activity.Utill.UserPreference;
 
 import java.util.List;
 
@@ -20,14 +21,16 @@ import java.util.List;
  */
 public class LocationAdapter extends BaseAdapter {
 
-    Context context;
-    List<LocationEntity> listLocation;
-    AQuery aq;
-    final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
+    private Context context;
+    private List<LocationEntity> listLocation;
+    private AQuery aq;
+    private final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
+    private UserPreference pref;
 
     public LocationAdapter(Context context, List<LocationEntity> listLocation) {
         this.context = context;
         this.listLocation = listLocation;
+        pref = new UserPreference(context);
 
     }
 
@@ -67,8 +70,19 @@ public class LocationAdapter extends BaseAdapter {
         }
 
         aq = new AQuery(convertView);
-        Holder.province_name.setText(listLocation.get(position).getNameTH());
-        Holder.location_desc.setText(listLocation.get(position).getAddressTH());
+
+        if (pref.getLang().equals("TH")) {
+            Holder.province_name.setText(listLocation.get(position).getNameTH());
+            Holder.location_desc.setText(listLocation.get(position).getAddressTH());
+        } else if (pref.getLang().equals("ENG")) {
+            Holder.province_name.setText(listLocation.get(position).getNameEng());
+            Holder.location_desc.setText(listLocation.get(position).getAddressEng());
+        } else if (pref.getLang().equals("CN")) {
+            Holder.province_name.setText(listLocation.get(position).getNameChi());
+            Holder.location_desc.setText(listLocation.get(position).getAddressChi());
+        }
+//        Holder.province_name.setText(listLocation.get(position).getNameTH());
+//        Holder.location_desc.setText(listLocation.get(position).getAddressTH());
 
         aq.id(Holder.img_location).progress(R.id.progress).image(PATH + listLocation.get(position).getImageLocationFile());
         return convertView;

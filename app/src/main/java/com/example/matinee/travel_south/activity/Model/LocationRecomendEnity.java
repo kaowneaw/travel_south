@@ -12,8 +12,13 @@ public class LocationRecomendEnity extends LocationEntity implements Parcelable 
 
     private int numCheckIn;
 
-    public LocationRecomendEnity(int location_id, String nameTH, String addressTH, String nameEng, String addressEng, String tel, float latitude, float longtitude, float distance, int type_id, int province_id, String imageLocationFile, List<Journey> listJorney, List<ImageLocation> listImage, int numCheckIn) {
-        super(location_id, nameTH, addressTH, nameEng, addressEng, tel, latitude, longtitude, distance, type_id, province_id, imageLocationFile, listJorney, listImage);
+    public LocationRecomendEnity(int location_id, String nameTH, String addressTH, String nameEng, String addressEng, String tel, float latitude, float longtitude, float distance, int type_id, int province_id, String imageLocationFile, List<Journey> listJorney, List<ImageLocation> listImage, String nameChi, String addressChi, int numCheckIn) {
+        super(location_id, nameTH, addressTH, nameEng, addressEng, tel, latitude, longtitude, distance, type_id, province_id, imageLocationFile, listJorney, listImage, nameChi, addressChi);
+        this.numCheckIn = numCheckIn;
+    }
+
+    public LocationRecomendEnity(Parcel in, int numCheckIn) {
+        super(in);
         this.numCheckIn = numCheckIn;
     }
 

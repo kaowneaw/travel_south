@@ -4,6 +4,7 @@ package com.example.matinee.travel_south.activity.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocationEntity implements Parcelable {
@@ -22,44 +23,9 @@ public class LocationEntity implements Parcelable {
     private String ImageLocationFile;
     private List<Journey> listJorney;
     private List<ImageLocation> listImage;
+    private String NameChi;
+    private String AddressChi;
 
-    public LocationEntity(int location_id, String nameTH, String addressTH, String nameEng, String addressEng, String tel, float latitude, float longtitude, float distance, int type_id, int province_id, String imageLocationFile, List<Journey> listJorney, List<ImageLocation> listImage) {
-
-        Location_id = location_id;
-        NameTH = nameTH;
-        AddressTH = addressTH;
-        NameEng = nameEng;
-        AddressEng = addressEng;
-        Tel = tel;
-        Latitude = latitude;
-        Longtitude = longtitude;
-        this.distance = distance;
-        Type_id = type_id;
-        Province_id = province_id;
-        ImageLocationFile = imageLocationFile;
-        this.listJorney = listJorney;
-        this.listImage = listImage;
-    }
-
-    public static final Creator<LocationEntity> CREATOR = new Creator<LocationEntity>() {
-        @Override
-        public LocationEntity createFromParcel(Parcel in) {
-            return new LocationEntity(in);
-        }
-
-        @Override
-        public LocationEntity[] newArray(int size) {
-            return new LocationEntity[size];
-        }
-    };
-
-    public List<ImageLocation> getListImage() {
-        return listImage;
-    }
-
-    public void setListImage(List<ImageLocation> listImage) {
-        this.listImage = listImage;
-    }
 
     public int getLocation_id() {
         return Location_id;
@@ -78,10 +44,6 @@ public class LocationEntity implements Parcelable {
     }
 
     public String getAddressTH() {
-
-        if (AddressTH.equals("")) {
-            return "-";
-        }
         return AddressTH;
     }
 
@@ -106,9 +68,6 @@ public class LocationEntity implements Parcelable {
     }
 
     public String getTel() {
-        if (Tel.equals("")) {
-            return "-";
-        }
         return Tel;
     }
 
@@ -172,6 +131,48 @@ public class LocationEntity implements Parcelable {
         this.listJorney = listJorney;
     }
 
+    public List<ImageLocation> getListImage() {
+        return listImage;
+    }
+
+    public void setListImage(List<ImageLocation> listImage) {
+        this.listImage = listImage;
+    }
+
+    public String getNameChi() {
+        return NameChi;
+    }
+
+    public void setNameChi(String nameChi) {
+        NameChi = nameChi;
+    }
+
+    public String getAddressChi() {
+        return AddressChi;
+    }
+
+    public void setAddressChi(String addressChi) {
+        AddressChi = addressChi;
+    }
+
+    public LocationEntity(int location_id, String nameTH, String addressTH, String nameEng, String addressEng, String tel, float latitude, float longtitude, float distance, int type_id, int province_id, String imageLocationFile, List<Journey> listJorney, List<ImageLocation> listImage, String nameChi, String addressChi) {
+        Location_id = location_id;
+        NameTH = nameTH;
+        AddressTH = addressTH;
+        NameEng = nameEng;
+        AddressEng = addressEng;
+        Tel = tel;
+        Latitude = latitude;
+        Longtitude = longtitude;
+        this.distance = distance;
+        Type_id = type_id;
+        Province_id = province_id;
+        ImageLocationFile = imageLocationFile;
+        this.listJorney = listJorney;
+        this.listImage = listImage;
+        NameChi = nameChi;
+        AddressChi = addressChi;
+    }
 
     @Override
     public int describeContents() {
@@ -180,7 +181,6 @@ public class LocationEntity implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(this.Location_id);
         dest.writeString(this.NameTH);
         dest.writeString(this.AddressTH);
@@ -193,11 +193,13 @@ public class LocationEntity implements Parcelable {
         dest.writeInt(this.Type_id);
         dest.writeInt(this.Province_id);
         dest.writeString(this.ImageLocationFile);
-
+        dest.writeList(this.listJorney);
+        dest.writeList(this.listImage);
+        dest.writeString(this.NameChi);
+        dest.writeString(this.AddressChi);
     }
 
     protected LocationEntity(Parcel in) {
-
         this.Location_id = in.readInt();
         this.NameTH = in.readString();
         this.AddressTH = in.readString();
@@ -210,7 +212,21 @@ public class LocationEntity implements Parcelable {
         this.Type_id = in.readInt();
         this.Province_id = in.readInt();
         this.ImageLocationFile = in.readString();
-
+        this.listJorney = new ArrayList<Journey>();
+        in.readList(this.listJorney, List.class.getClassLoader());
+        this.listImage = new ArrayList<ImageLocation>();
+        in.readList(this.listImage, List.class.getClassLoader());
+        this.NameChi = in.readString();
+        this.AddressChi = in.readString();
     }
 
+    public static final Creator<LocationEntity> CREATOR = new Creator<LocationEntity>() {
+        public LocationEntity createFromParcel(Parcel source) {
+            return new LocationEntity(source);
+        }
+
+        public LocationEntity[] newArray(int size) {
+            return new LocationEntity[size];
+        }
+    };
 }

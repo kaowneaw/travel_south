@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                                             String id = object.getString("id");
                                             String name = object.getString("name");
                                             String email = object.getString("email");
-                                            UserPreference pref = new UserPreference(getApplicationContext(), id, name, email);//Facebook not have username and password
+                                            UserPreference pref = new UserPreference(getApplicationContext(), id, name, email,"TH");//Facebook not have username and password
                                             if (pref.commit()) {
                                                 callService(id, name, email);
                                                 Intent toMain = new Intent(getApplicationContext(), MainActivity.class);

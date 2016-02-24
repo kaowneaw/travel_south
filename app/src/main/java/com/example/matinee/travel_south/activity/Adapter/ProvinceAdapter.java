@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.ProvinceEntity;
+import com.example.matinee.travel_south.activity.Utill.UserPreference;
 
 import java.util.List;
 
@@ -19,11 +20,12 @@ public class ProvinceAdapter extends BaseAdapter {
 
     Context context;
     List<ProvinceEntity> listProvince;
-
+    private UserPreference pref;
 
     public ProvinceAdapter(Context context, List<ProvinceEntity> listProvince) {
         this.context = context;
         this.listProvince = listProvince;
+        pref = new UserPreference(context);
     }
 
     @Override
@@ -60,6 +62,14 @@ public class ProvinceAdapter extends BaseAdapter {
         }
 
         Holder.province_name.setText(listProvince.get(position).getProvinceName());
+
+        if (pref.getLang().equals("TH")) {
+            Holder.province_name.setText(listProvince.get(position).getProvinceName());
+        } else if (pref.getLang().equals("ENG")) {
+            Holder.province_name.setText(listProvince.get(position).getProvinceEng());
+        } else if (pref.getLang().equals("CN")) {
+            Holder.province_name.setText(listProvince.get(position).getProvinceChina());
+        }
 
         return convertView;
     }
