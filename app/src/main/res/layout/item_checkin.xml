@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/img_profile"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_gravity="left"
                 android:src="@mipmap/user" />
 
@@ -105,39 +105,39 @@
         android:textColor="@android:color/black"
         android:textSize="14sp" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right">
+    <!--<TableRow-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="right">-->
 
-        <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_margin="3dp"
-            android:background="@mipmap/comment" />
+        <!--<ImageView-->
+            <!--android:layout_width="35dp"-->
+            <!--android:layout_height="35dp"-->
+            <!--android:layout_margin="3dp"-->
+            <!--android:background="@mipmap/comment" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="3dp"
-            android:text="25"
-            android:textColor="@android:color/black" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_margin="3dp"-->
+            <!--android:text="25"-->
+            <!--android:textColor="@android:color/black" />-->
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="3dp"
-            android:background="@mipmap/like" />
+        <!--<ImageView-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_margin="3dp"-->
+            <!--android:background="@mipmap/like" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="3dp"
-            android:text="109"
-            android:textColor="@android:color/black" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_margin="3dp"-->
+            <!--android:text="109"-->
+            <!--android:textColor="@android:color/black" />-->
 
-    </TableRow>
+    <!--</TableRow>-->
 
 </LinearLayout>

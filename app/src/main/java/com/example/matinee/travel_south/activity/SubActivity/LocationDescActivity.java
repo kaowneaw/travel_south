@@ -35,6 +35,7 @@ import com.example.matinee.travel_south.activity.Model.ImageLocation;
 import com.example.matinee.travel_south.activity.Model.Journey;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
+import com.example.matinee.travel_south.activity.Utill.UserPreference;
 import com.google.gson.Gson;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -62,12 +63,14 @@ public class LocationDescActivity extends AppCompatActivity {
     private ViewFlipper fliper;
     private float lastX;
     private AQuery aq = new AQuery(this);
+    private UserPreference pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         MultiDex.install(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_desc);
+        pref = new UserPreference(getApplicationContext());
         Bundle data = getIntent().getExtras();
         locationIntent = data.getParcelable("locationObj");
         SettingToobar();
@@ -92,7 +95,13 @@ public class LocationDescActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(locationIntent.getNameTH());
+            if (pref.getLang().equals("TH")) {
+                getSupportActionBar().setTitle(locationIntent.getNameTH());
+            } else if (pref.getLang().equals("ENG")) {
+                getSupportActionBar().setTitle(locationIntent.getNameEng());
+            } else {
+                getSupportActionBar().setTitle(locationIntent.getNameChi());
+            }
         } else {
             Toast.makeText(getApplicationContext(), "ActionBar not avaliable", Toast.LENGTH_SHORT).show();
         }
@@ -137,7 +146,14 @@ public class LocationDescActivity extends AppCompatActivity {
                     setFlipperImage(data);
                 }
 
-                address_desc.setText(location.getAddressTH());
+                if (pref.getLang().equals("TH")) {
+                    address_desc.setText(location.getAddressTH());
+                } else if (pref.getLang().equals("ENG")) {
+                    address_desc.setText(location.getAddressEng());
+                } else {
+                    address_desc.setText(location.getAddressChi());
+                }
+
                 tel_desc.setText(location.getTel());
 
                 for (Journey jorney : location.getListJorney()) {

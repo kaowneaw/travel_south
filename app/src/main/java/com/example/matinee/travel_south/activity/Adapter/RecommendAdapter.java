@@ -12,6 +12,7 @@ import com.androidquery.AQuery;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.LocationRecomendEnity;
+import com.example.matinee.travel_south.activity.Utill.UserPreference;
 
 import java.util.List;
 
@@ -24,10 +25,12 @@ public class RecommendAdapter extends BaseAdapter {
     List<LocationRecomendEnity> listLocation;
     AQuery aq;
     final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
+    private UserPreference pref;
 
     public RecommendAdapter(Context context, List<LocationRecomendEnity> listLocation) {
         this.context = context;
         this.listLocation = listLocation;
+        pref = new UserPreference(context);
     }
 
     @Override
@@ -67,8 +70,18 @@ public class RecommendAdapter extends BaseAdapter {
         }
 
         aq = new AQuery(convertView);
-        Holder.province_name.setText(listLocation.get(position).getNameTH());
-        Holder.location_desc.setText(listLocation.get(position).getAddressTH());
+        if (pref.getLang().equals("TH")) {
+            Holder.province_name.setText(listLocation.get(position).getNameTH());
+            Holder.location_desc.setText(listLocation.get(position).getAddressTH());
+        } else if (pref.getLang().equals("ENG")) {
+            Holder.province_name.setText(listLocation.get(position).getNameEng());
+            Holder.location_desc.setText(listLocation.get(position).getAddressEng());
+        } else if (pref.getLang().equals("CN")) {
+            Holder.province_name.setText(listLocation.get(position).getNameChi());
+            Holder.location_desc.setText(listLocation.get(position).getAddressChi());
+        }
+//        Holder.province_name.setText(listLocation.get(position).getNameTH());
+//        Holder.location_desc.setText(listLocation.get(position).getAddressTH());
         Holder.chekinNum.setText(listLocation.get(position).getNumCheckIn() + "");
         aq.id(Holder.img_location).progress(R.id.progress).image(PATH + listLocation.get(position).getImageLocationFile());
         return convertView;
