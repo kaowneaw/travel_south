@@ -4,10 +4,28 @@
     android:layout_height="match_parent"
     tools:context="com.example.matinee.travel_south.activity.SubActivity.LocationActivity$PlaceholderFragment">
 
+    <TableRow
+        android:id="@+id/dummytext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/amountLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text=""
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </TableRow>
+
     <ListView
         android:id="@+id/lv_location"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/dummytext" />
 
     <TextView
         android:id="@+id/status"

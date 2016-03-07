@@ -193,8 +193,6 @@ public class LocationEntity implements Parcelable {
         dest.writeInt(this.Type_id);
         dest.writeInt(this.Province_id);
         dest.writeString(this.ImageLocationFile);
-        dest.writeList(this.listJorney);
-        dest.writeList(this.listImage);
         dest.writeString(this.NameChi);
         dest.writeString(this.AddressChi);
     }
@@ -212,10 +210,6 @@ public class LocationEntity implements Parcelable {
         this.Type_id = in.readInt();
         this.Province_id = in.readInt();
         this.ImageLocationFile = in.readString();
-        this.listJorney = new ArrayList<Journey>();
-        in.readList(this.listJorney, List.class.getClassLoader());
-        this.listImage = new ArrayList<ImageLocation>();
-        in.readList(this.listImage, List.class.getClassLoader());
         this.NameChi = in.readString();
         this.AddressChi = in.readString();
     }

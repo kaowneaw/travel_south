@@ -111,7 +111,7 @@ public class LocationActivity extends AppCompatActivity {
         private int arrTypeLocation[] = {10, 20, 30, 40, 50}; //ID Type Location
         private LocationAdapter adapter;
         private List<LocationEntity> listLocation;
-        private TextView status;
+        private TextView status,amountLocation;
 
         public PlaceholderFragment() {
         }
@@ -140,6 +140,7 @@ public class LocationActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_location, container, false);
             status = (TextView) rootView.findViewById(R.id.status);
+            amountLocation = (TextView) rootView.findViewById(R.id.amountLocation);
             lv_location = (ListView) rootView.findViewById(R.id.lv_location);
             Log.d("onCreateView", "<>");
             return rootView;
@@ -203,6 +204,7 @@ public class LocationActivity extends AppCompatActivity {
                     }
                     adapter = new LocationAdapter(getActivity(), listLocation);
                     lv_location.setAdapter(adapter);
+                    amountLocation.setText("มีทั้งหมด "+listLocation.size()+" สถานที่");
                 }
             }.execute();
         }
