@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -55,6 +57,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
@@ -71,7 +74,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     String realPath;
     private CallbackManager callbackManager;
     private LoginManager manager;
-    private CheckBox isShare;
+    private ImageButton shareFacebook;
+    boolean isShareFace = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +98,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
-
+        bmOptions.inSampleSize = 2;
         Bitmap image = BitmapFactory.decodeFile(realPath, bmOptions);
 
         SharePhoto photo = new SharePhoto.Builder().setBitmap(image).setCaption(this.content.getText().toString()).build();
@@ -138,39 +142,11 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.post) {
 
             if (this.location != null && realPath != null) {
+                isShareFace = false;
                 String content = this.content.getText().toString();
                 File imgFile = new File(realPath);
                 Log.v("imgFile", imgFile.toString());
                 callService(content, imgFile);//posting
-
-                if (isShare.isChecked()) {
-
-                    callbackManager = CallbackManager.Factory.create();
-
-                    List<String> permissionNeeds = Arrays.asList("publish_actions");
-
-                    manager = LoginManager.getInstance();
-
-                    manager.logInWithPublishPermissions(this, permissionNeeds);
-
-                    manager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            publishImage();
-                        }
-
-                        @Override
-                        public void onCancel() {
-                            System.out.println("onCancel");
-                        }
-
-                        @Override
-                        public void onError(FacebookException exception) {
-                            System.out.println("onError");
-                            exception.printStackTrace();
-                        }
-                    });
-                }
             } else {
                 Toast.makeText(getApplicationContext(), "Plese Select Location", Toast.LENGTH_SHORT).show();
             }
@@ -203,11 +179,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initWidget() {
 
-        isShare = (CheckBox) findViewById(R.id.isShare);
+        shareFacebook = (ImageButton) findViewById(R.id.shareFacebook);
+        shareFacebook.setOnClickListener(this);
         img = (ImageView) findViewById(R.id.img);
         content = (EditText) findViewById(R.id.content);
-        TableRow checkinLocation = (TableRow) findViewById(R.id.checkinLocation);
         locationName = (TextView) findViewById(R.id.locationName);
+        TableRow checkinLocation = (TableRow) findViewById(R.id.checkinLocation);
         checkinLocation.setOnClickListener(this);
     }
 
@@ -231,25 +208,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
             if (resultCode == RESULT_OK) {
                 if (data != null) {
-//                    try {
-//                        Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-//                        img.setImageBitmap(image);
-//                        // SDK < API11
-//                        if (Build.VERSION.SDK_INT < 11)
-//                            realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
-//
-//                            // SDK >= 11 && SDK < 19
-//                        else if (Build.VERSION.SDK_INT < 19)
-//                            realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
-//
-//                            // SDK > 19 (Android 4.4)
-//                        else
-//                            realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
-//
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inSampleSize = 4;
                     Uri selectedImageUri = data.getData();
@@ -258,10 +217,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                     int height = bitmap.getHeight(), width = bitmap.getWidth();
 
                     if (height > 1280 && width > 960) {
+
                         Bitmap imgbitmap = BitmapFactory.decodeFile(realPath, options);
                         Drawable d = new BitmapDrawable(getResources(), imgbitmap);
                         img.setBackground(d);
-
                         System.out.println("Need to resize");
 
                     } else {
@@ -281,7 +240,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
             if (resultCode == RESULT_OK) {
 
+                Uri u = data.getData();
                 Bitmap image = (Bitmap) data.getExtras().get("data");
+                realPath = getPath(u);
+                Log.v("realPath", realPath + " |<>|");
                 img.setImageBitmap(image);
             }
 
@@ -303,6 +265,45 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.checkinLocation) {
             //select loaction
             startActivityForResult(new Intent(this, SelectLocationActivity.class), SEARCH_LOCATION);
+
+        } else if (v.getId() == R.id.shareFacebook) {
+
+            if (this.location != null && realPath != null) {
+                isShareFace = true;
+                String content = this.content.getText().toString();
+                File imgFile = new File(realPath);
+                Log.v("imgFile", imgFile.toString());
+                callService(content, imgFile);//posting
+
+                callbackManager = CallbackManager.Factory.create();
+
+                List<String> permissionNeeds = Arrays.asList("publish_actions");
+
+                manager = LoginManager.getInstance();
+
+                manager.logInWithPublishPermissions(this, permissionNeeds);
+
+                manager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        publishImage();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        System.out.println("onCancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        System.out.println("onError");
+                        exception.printStackTrace();
+                    }
+                });
+
+            } else {
+                Toast.makeText(getApplicationContext(), "Plese Select Location", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -370,10 +371,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-
-                if (!isShare.isChecked()) {
+                if (!isShareFace) {
                     finish();
                 }
+
             }
         }.execute();
 
@@ -411,16 +412,41 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             inputStream.close();
 
             // here i override the original image file
-            file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(file);
+//            file.createNewFile();
+//            FileOutputStream outputStream = new FileOutputStream(file);
+//
+//            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
 
-            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
-
-            return file;
+            return SaveImage(selectedBitmap);
 
         } catch (Exception e) {
-            return null;
+            return file;
         }
+    }
+
+    private File SaveImage(Bitmap finalBitmap) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        //String root = getCacheDir().toString();
+        File myDir = new File(root + "/travelSouth");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-" + n + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 70, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return file;
     }
 
     /**

@@ -111,7 +111,7 @@ public class LocationActivity extends AppCompatActivity {
         private int arrTypeLocation[] = {10, 20, 30, 40, 50}; //ID Type Location
         private LocationAdapter adapter;
         private List<LocationEntity> listLocation;
-        private TextView status,amountLocation;
+        private TextView status, amountLocation;
 
         public PlaceholderFragment() {
         }
@@ -204,7 +204,7 @@ public class LocationActivity extends AppCompatActivity {
                     }
                     adapter = new LocationAdapter(getActivity(), listLocation);
                     lv_location.setAdapter(adapter);
-                    amountLocation.setText("มีทั้งหมด "+listLocation.size()+" สถานที่");
+                    amountLocation.setText("มีทั้งหมด " + listLocation.size() + " สถานที่");
                 }
             }.execute();
         }

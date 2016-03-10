@@ -44,16 +44,15 @@
                 android:gravity="center_vertical"
                 android:padding="6dp">
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:background="@mipmap/marker" />
+                <!--<ImageView-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:background="@mipmap/marker" />-->
 
                 <TextView
                     android:id="@+id/address_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:text="-"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />

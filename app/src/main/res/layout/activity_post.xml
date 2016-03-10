@@ -65,17 +65,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:gravity="center_vertical">
+        android:gravity="right">
 
-        <CheckBox
-            android:id="@+id/isShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <!--<CheckBox-->
+        <!--android:id="@+id/isShare"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@mipmap/share" />
+            android:id="@+id/shareFacebook"
+            android:layout_width="160dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/shareonface" />
 
     </TableRow>
 
