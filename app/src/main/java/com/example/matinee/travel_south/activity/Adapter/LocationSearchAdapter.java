@@ -13,6 +13,8 @@ import com.androidquery.AQuery;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +64,7 @@ public class LocationSearchAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_lv_location_search, null);
             Holder.province_name = (TextView) convertView.findViewById(R.id.location_name);
             Holder.img_location = (ImageView) convertView.findViewById(R.id.img_location);
+            Holder.distance = (TextView) convertView.findViewById(R.id.distance);
             convertView.setTag(Holder);
 
         } else {
@@ -70,6 +73,8 @@ public class LocationSearchAdapter extends BaseAdapter {
         }
 
         aq = new AQuery(convertView);
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        Holder.distance.setText("ระยะทาง " + formatter.format(listLocation.get(position).getDistance()) + " กม.");
         Holder.province_name.setText(listLocationFilter.get(position).getNameTH());
         aq.id(Holder.img_location).progress(R.id.progress).image(PATH + listLocationFilter.get(position).getImageLocationFile());
         return convertView;
@@ -78,6 +83,7 @@ public class LocationSearchAdapter extends BaseAdapter {
     class widgetHolder {
         ImageView img_location;
         TextView province_name;
+        TextView distance;
     }
 
     // Filter Class

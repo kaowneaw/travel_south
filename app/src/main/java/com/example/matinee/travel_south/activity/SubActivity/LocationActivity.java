@@ -142,6 +142,8 @@ public class LocationActivity extends AppCompatActivity {
             status = (TextView) rootView.findViewById(R.id.status);
             amountLocation = (TextView) rootView.findViewById(R.id.amountLocation);
             lv_location = (ListView) rootView.findViewById(R.id.lv_location);
+            if (listLocation != null)
+                amountLocation.setText("มีทั้งหมด " + listLocation.size() + " สถานที่");
             Log.d("onCreateView", "<>");
             return rootView;
         }

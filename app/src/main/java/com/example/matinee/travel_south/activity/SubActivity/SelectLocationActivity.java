@@ -2,6 +2,7 @@ package com.example.matinee.travel_south.activity.SubActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,20 +20,26 @@ import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Adapter.LocationSearchAdapter;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
+import com.example.matinee.travel_south.activity.Utill.GPSTracker;
+import com.google.android.gms.location.LocationListener;
 import com.google.gson.Gson;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.List;
 
-public class SelectLocationActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class SelectLocationActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, LocationListener {
 
     private List<LocationEntity> listLocation;
     private ListView lv_selectLocation;
     private LocationSearchAdapter adapter;
     private EditText edt_search;
+    // GPSTracker class
+    GPSTracker gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +47,24 @@ public class SelectLocationActivity extends AppCompatActivity implements Adapter
         setContentView(R.layout.activity_select_location);
         SettingToolbar();
         initWidget();
+        gps = new GPSTracker(this);
+
+        // check if GPS enabled
+        if (gps.canGetLocation()) {
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
     }
+
 
     private void SettingToolbar() {
         //Toolbar setting
@@ -56,6 +80,7 @@ public class SelectLocationActivity extends AppCompatActivity implements Adapter
     }
 
     private void initWidget() {
+
         edt_search = (EditText) findViewById(R.id.edt_search);
         lv_selectLocation = (ListView) findViewById(R.id.lv_selectLocation);
         lv_selectLocation.setOnItemClickListener(this);
@@ -85,10 +110,23 @@ public class SelectLocationActivity extends AppCompatActivity implements Adapter
     @Override
     protected void onResume() {
         super.onResume();
-        callService();
+        gps = new GPSTracker(this);
+        if (gps.canGetLocation()) {
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            callService(latitude, longitude);
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
     }
 
-    private void callService() {
+    private void callService(final double latitude, final double longitude) {
 
         final ProgressDialog dialog = new ProgressDialog(this);
         new AsyncTask<Void, Void, Void>() {
@@ -102,10 +140,15 @@ public class SelectLocationActivity extends AppCompatActivity implements Adapter
 
             @Override
             protected Void doInBackground(Void... voids) {
-                String url = "http://www.jaa-ikuzo.com/tvs/getAllLocation.php";
+                String url = "http://www.jaa-ikuzo.com/tvs/getLocationNearby.php";
                 OkHttpClient client = new OkHttpClient();
-
+                RequestBody formBody = new FormEncodingBuilder()
+                        .add("lat", latitude + "")
+                        .add("lng", longitude + "")
+                        .add("type", "0")
+                        .build();
                 Request request = new Request.Builder()
+                        .post(formBody)
                         .url(url)
                         .build();
 
@@ -146,5 +189,22 @@ public class SelectLocationActivity extends AppCompatActivity implements Adapter
         data.putExtra("locationObj", listLocation.get(position));
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (gps.canGetLocation()) {
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+            // \n is for new line
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
     }
 }

@@ -41,5 +41,15 @@
             android:text="Text"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@id/location_name"
+            android:paddingTop="4dp"
+            android:text="xxxxxxxx" />
     </RelativeLayout>
+
+
 </LinearLayout>
