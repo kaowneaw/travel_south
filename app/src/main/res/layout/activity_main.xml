@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="30"
-        android:background="@mipmap/travel" />
+        android:background="@mipmap/home2" />
 
     <ImageButton
         android:id="@+id/btHome_rec"
@@ -26,7 +26,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         android:layout_weight="30"
-        android:background="@mipmap/recommend" />
+        android:background="@mipmap/home1" />
 
     <ImageButton
         android:id="@+id/btHome_checkin"
@@ -34,7 +34,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         android:layout_weight="30"
-        android:background="@mipmap/checkin" />
+        android:background="@mipmap/home3" />
 
 
 </LinearLayout>
