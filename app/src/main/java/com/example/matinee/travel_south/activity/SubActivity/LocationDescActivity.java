@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -53,10 +54,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class LocationDescActivity extends AppCompatActivity {
+public class LocationDescActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView img_location_desc;
-    private TextView address_desc, tel_desc;
+    private TextView address_desc, tel_desc, locationDesc;
     private LocationEntity location, locationIntent;
     private final String PATH = "http://www.jaa-ikuzo.com/tvs/img/location/";
     private LinearLayout contrainerJourney;
@@ -64,6 +65,7 @@ public class LocationDescActivity extends AppCompatActivity {
     private float lastX;
     private AQuery aq = new AQuery(this);
     private UserPreference pref;
+    TableRow telClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,9 @@ public class LocationDescActivity extends AppCompatActivity {
         address_desc = (TextView) findViewById(R.id.address_desc);
         tel_desc = (TextView) findViewById(R.id.tel_desc);
         contrainerJourney = (LinearLayout) findViewById(R.id.contrainerJourney);
-
+        locationDesc = (TextView) findViewById(R.id.locationDesc);
+        telClick = (TableRow) findViewById(R.id.telClick);
+        telClick.setOnClickListener(this);
     }
 
     private void SettingToobar() {
@@ -147,11 +151,14 @@ public class LocationDescActivity extends AppCompatActivity {
                 }
 
                 if (pref.getLang().equals("TH")) {
-                    address_desc.setText(location.getAddressTH());
+                    address_desc.setText("ที่อยู่ " + location.getAddressTH());
+                    locationDesc.setText(location.getAttDetails_Th());
                 } else if (pref.getLang().equals("ENG")) {
-                    address_desc.setText(location.getAddressEng());
+                    address_desc.setText("Address " + location.getAddressEng());
+                    locationDesc.setText(location.getAttDetails_Eng());
                 } else {
                     address_desc.setText(location.getAddressChi());
+                    locationDesc.setText(location.getAttDetails_Chi());
                 }
 
                 tel_desc.setText(location.getTel());
@@ -273,5 +280,12 @@ public class LocationDescActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        String phone = location.getTel();
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+        startActivity(intent);
     }
 }

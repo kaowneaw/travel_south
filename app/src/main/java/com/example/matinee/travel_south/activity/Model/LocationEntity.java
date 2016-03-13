@@ -15,6 +15,9 @@ public class LocationEntity implements Parcelable {
     private String NameEng;
     private String AddressEng;
     private String Tel;
+    private String AttDetails_Th;
+    private String AttDetails_Eng;
+    private String AttDetails_Chi;
     private float Latitude;
     private float Longtitude;
     private float distance;
@@ -26,6 +29,29 @@ public class LocationEntity implements Parcelable {
     private String NameChi;
     private String AddressChi;
 
+    public String getAttDetails_Th() {
+        return AttDetails_Th;
+    }
+
+    public void setAttDetails_Th(String attDetails_Th) {
+        AttDetails_Th = attDetails_Th;
+    }
+
+    public String getAttDetails_Eng() {
+        return AttDetails_Eng;
+    }
+
+    public void setAttDetails_Eng(String attDetails_Eng) {
+        AttDetails_Eng = attDetails_Eng;
+    }
+
+    public String getAttDetails_Chi() {
+        return AttDetails_Chi;
+    }
+
+    public void setAttDetails_Chi(String attDetails_Chi) {
+        AttDetails_Chi = attDetails_Chi;
+    }
 
     public int getLocation_id() {
         return Location_id;

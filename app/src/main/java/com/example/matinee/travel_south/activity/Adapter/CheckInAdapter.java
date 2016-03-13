@@ -19,6 +19,9 @@ import com.androidquery.callback.AjaxStatus;
 import com.example.matinee.travel_south.R;
 import com.example.matinee.travel_south.activity.Model.FeedEntity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,6 +69,7 @@ public class CheckInAdapter extends BaseAdapter {
             Holder.feed_img = (ImageView) convertView.findViewById(R.id.feed_img);
             Holder.feed_location = (TextView) convertView.findViewById(R.id.feed_location);
             Holder.img_profile = (ImageView) convertView.findViewById(R.id.img_profile);
+            Holder.feed_date = (TextView) convertView.findViewById(R.id.feed_date);
             convertView.setTag(Holder);
 
         } else {
@@ -74,6 +78,17 @@ public class CheckInAdapter extends BaseAdapter {
         }
 
         aq = new AQuery(convertView);
+
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        try {
+            Date date = format.parse(listFeed.get(position).getDate_time());
+            Holder.feed_date.setText(format.format(date));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         Holder.feed_location.setText(listFeed.get(position).getNameTH());
         Holder.user_name.setText(listFeed.get(position).getMember_name());
         Holder.content.setText(listFeed.get(position).getContent());
@@ -96,6 +111,7 @@ public class CheckInAdapter extends BaseAdapter {
 
         ImageView feed_img;
         TextView feed_location;
+        TextView feed_date;
         TextView content;
         TextView user_name;
         ImageView img_profile;

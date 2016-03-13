@@ -45,7 +45,7 @@
             android:layout_weight="30"
             android:gravity="right"
             android:text="20-10-2558"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/darker_gray"
             android:textSize="14sp" />
 
     </TableRow>
