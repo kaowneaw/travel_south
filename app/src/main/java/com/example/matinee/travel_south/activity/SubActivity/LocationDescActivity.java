@@ -166,27 +166,64 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
                 for (Journey jorney : location.getListJorney()) {
 
                     TableRow row = new TableRow(getApplicationContext());
-                    row.setPadding(20, 20, 20, 20);
-                    ImageView img = new ImageView(getApplicationContext());
-                    TableRow.LayoutParams layoutImgview = new TableRow.LayoutParams(80, 80);
-                    img.setLayoutParams(layoutImgview);
-                    img.setLayoutParams(layoutImgview);
-                    img.setBackgroundResource(R.mipmap.car);
+                    row.setPadding(10, 10, 10, 10);
+//                    ImageView img = new ImageView(getApplicationContext());
+//                    TableRow.LayoutParams layoutImgview = new TableRow.LayoutParams(80, 80);
+//                    img.setLayoutParams(layoutImgview);
+//                    img.setLayoutParams(layoutImgview);
+//                    img.setBackgroundResource(R.mipmap.car);
 
                     TableRow.LayoutParams layout_gravity = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
                     layout_gravity.weight = 1.0f;
                     layout_gravity.gravity = Gravity.TOP;
 
                     TextView tv = new TextView(getApplicationContext());
-                    tv.setPadding(50, 0, 0, 0);
+                    tv.setPadding(0, 0, 0, 0);
                     tv.setLayoutParams(layout_gravity);
-                    tv.setText(jorney.getJourneyDesc());
-                    tv.setGravity(Gravity.CENTER_VERTICAL);
-                    tv.setTextSize(16);
-                    tv.setTextColor(Color.BLACK);
+                    int count = 1;
+                    if (pref.getLang().equals("TH")) {
+                        if (!jorney.getCarTh().equals("")) {
 
+                            tv.setText(count + ". " + jorney.getCarTh());
+                            count++;
+                        }
+                        if (!jorney.getBusTh().equals("")) {
+                            tv.append("\n\n" + count + ". " + jorney.getBusTh());
+                            count++;
+                        }
+                        if (!jorney.getTrainTh().equals("")) {
+                            tv.append("\n\n" + count + ". " + jorney.getTrainTh());
+                            count++;
+                        }
+                        if (!jorney.getAirplaneTh().equals("")) {
+                            tv.append("\n\n" + count + ". " + jorney.getAirplaneTh());
+                            count++;
+                        }
+
+                    } else {
+                        if (!jorney.getCarEng().equals("")) {
+                            tv.setText(count + ". " + jorney.getCarEng());
+                            count++;
+                        }
+                        if (!jorney.getBusEng().equals("")) {
+                            tv.append("\n\n" + count + ". " + jorney.getBusEng());
+                            count++;
+                        }
+                        if (!jorney.getTrainEng().equals("")) {
+                            tv.append("\n\n" + count + ". " + jorney.getTrainEng());
+                            count++;
+                        }
+                        if (!jorney.getAirplaneEng().equals("")) {
+                            tv.append("\n\n" + count + ". " + jorney.getAirplaneEng());
+                            count++;
+                        }
+                    }
+
+                    tv.setGravity(Gravity.CENTER_VERTICAL);
+                    tv.setTextSize(12);
+                    tv.setTextColor(Color.BLACK);
                     row.setGravity(Gravity.CENTER_VERTICAL);
-                    row.addView(img);
+//                  row.addView(img);
                     row.addView(tv);
 
                     contrainerJourney.addView(row);

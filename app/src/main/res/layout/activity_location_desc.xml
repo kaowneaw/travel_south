@@ -24,95 +24,100 @@
             android:layout_height="0dp"
             android:layout_weight="35" />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="65"
-            android:orientation="vertical"
-            android:paddingTop="10dp">
+            android:layout_weight="65">
 
-            <TableRow
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center_vertical"
-                android:padding="6dp">
+                android:layout_height="0dp"
+                android:layout_weight="65"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
 
-                <TextView
-                    android:id="@+id/address_desc"
-                    android:layout_width="wrap_content"
+                <TableRow
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="-"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-            </TableRow>
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical"
+                    android:padding="6dp">
 
-            <TableRow
-                android:id="@+id/telClick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="4dp"
-                android:gravity="center_vertical"
-                android:padding="6dp">
+                    <TextView
+                        android:id="@+id/address_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+                </TableRow>
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:background="@mipmap/tel" />
-
-                <TextView
-                    android:id="@+id/tel_desc"
-                    android:layout_width="wrap_content"
+                <TableRow
+                    android:id="@+id/telClick"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="-"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:padding="6dp">
 
-            </TableRow>
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@mipmap/tel" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="4dp"
-                android:gravity="center_vertical"
-                android:padding="6dp">
+                    <TextView
+                        android:id="@+id/tel_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="-"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/locationDesc"
-                    android:layout_width="wrap_content"
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:ellipsize="end"
-                    android:text="-"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:padding="6dp">
 
-            </TableRow>
+                    <TextView
+                        android:id="@+id/locationDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="10dp"
-                android:padding="6dp">
+                </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <TableRow
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="การเดินทาง"
-                    android:textStyle="bold" />
-            </TableRow>
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="6dp">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="การเดินทาง"
+                        android:textStyle="bold" />
+                </TableRow>
+
+
+
+                <!--<ScrollView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
                 <LinearLayout
                     android:id="@+id/contrainerJourney"
@@ -123,9 +128,11 @@
 
                 </LinearLayout>
 
-            </ScrollView>
+                <!--</ScrollView>-->
 
-        </LinearLayout>
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 
