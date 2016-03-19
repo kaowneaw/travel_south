@@ -16,6 +16,7 @@ import com.example.matinee.travel_south.activity.SubActivity.CheckInActivity;
 import com.example.matinee.travel_south.activity.SubActivity.MenuActivity;
 import com.example.matinee.travel_south.activity.SubActivity.ProvinceActivity;
 import com.example.matinee.travel_south.activity.SubActivity.RecommendActivity;
+import com.example.matinee.travel_south.activity.SubActivity.SearchMenuLocationActivity;
 import com.example.matinee.travel_south.activity.SubActivity.SelectLocationActivity;
 import com.example.matinee.travel_south.activity.Utill.UserPreference;
 
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //noinspection SimplifiableIfStatement
         if (id == R.id.search_location) {
 
-            startActivity(new Intent(this, SelectLocationActivity.class));
+            startActivity(new Intent(this, SearchMenuLocationActivity.class));
 
         } else if (id == R.id.menu) {
             startActivity(new Intent(this, MenuActivity.class));

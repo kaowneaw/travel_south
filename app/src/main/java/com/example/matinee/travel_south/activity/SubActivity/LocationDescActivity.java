@@ -152,13 +152,13 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
 
                 if (pref.getLang().equals("TH")) {
                     address_desc.setText("ที่อยู่ " + location.getAddressTH());
-                    locationDesc.setText(location.getAttDetails_Th());
+                    locationDesc.setText(location.getWebsite()+"\n"+location.getAttDetails_Th());
                 } else if (pref.getLang().equals("ENG")) {
                     address_desc.setText("Address " + location.getAddressEng());
-                    locationDesc.setText(location.getAttDetails_Eng());
+                    locationDesc.setText(location.getWebsite()+"\n"+location.getAttDetails_Eng());
                 } else {
                     address_desc.setText(location.getAddressChi());
-                    locationDesc.setText(location.getAttDetails_Chi());
+                    locationDesc.setText(location.getWebsite()+"\n"+location.getAttDetails_Chi());
                 }
 
                 tel_desc.setText(location.getTel());

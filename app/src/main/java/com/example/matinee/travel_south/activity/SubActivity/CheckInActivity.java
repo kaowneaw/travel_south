@@ -60,6 +60,8 @@ public class CheckInActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+
+
     private void initWidget() {
 
         lv_checkin = (ListView) findViewById(R.id.lv_checkin);

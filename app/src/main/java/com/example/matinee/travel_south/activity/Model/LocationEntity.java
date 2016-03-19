@@ -18,6 +18,7 @@ public class LocationEntity implements Parcelable {
     private String AttDetails_Th;
     private String AttDetails_Eng;
     private String AttDetails_Chi;
+    private String Website;
     private float Latitude;
     private float Longtitude;
     private float distance;
@@ -28,6 +29,14 @@ public class LocationEntity implements Parcelable {
     private List<ImageLocation> listImage;
     private String NameChi;
     private String AddressChi;
+
+    public String getWebsite() {
+        return Website;
+    }
+
+    public void setWebsite(String website) {
+        Website = website;
+    }
 
     public String getAttDetails_Th() {
         return AttDetails_Th;
