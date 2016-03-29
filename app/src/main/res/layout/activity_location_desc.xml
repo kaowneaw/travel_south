@@ -36,6 +36,16 @@
                 android:orientation="vertical"
                 android:paddingTop="10dp">
 
+                <TextView
+                    android:id="@+id/address_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="Address"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -51,7 +61,18 @@
                         android:text="-"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
+
                 </TableRow>
+
+                <TextView
+                    android:id="@+id/tel_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="Tel"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TableRow
                     android:id="@+id/telClick"
@@ -63,21 +84,57 @@
                     android:gravity="center_vertical"
                     android:padding="6dp">
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@mipmap/tel" />
-
                     <TextView
                         android:id="@+id/tel_desc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+
                         android:text="-"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
                 </TableRow>
+
+                <TextView
+                    android:id="@+id/web_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="Website"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TableRow
+                    android:id="@+id/webClick"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:padding="6dp">
+
+
+                    <TextView
+                        android:id="@+id/web_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                </TableRow>
+
+                <TextView
+                    android:id="@+id/desc_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="Description"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -98,20 +155,30 @@
 
                 </TableRow>
 
-                <TableRow
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/travel_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="6dp">
+                    android:layout_marginLeft="6dp"
+                    android:text="Travel By"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="การเดินทาง"
-                        android:textStyle="bold" />
-                </TableRow>
+                <!--<TableRow-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:padding="6dp">-->
+
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="การเดินทาง"-->
+                <!--android:textStyle="bold" />-->
+                <!--</TableRow>-->
 
 
                 <!--<ScrollView-->

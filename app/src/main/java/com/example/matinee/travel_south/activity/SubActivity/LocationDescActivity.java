@@ -66,6 +66,7 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
     private AQuery aq = new AQuery(this);
     private UserPreference pref;
     TableRow telClick;
+    TextView address_text, tel_text, desc_text, travel_text, web_desc, web_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,12 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
         locationDesc = (TextView) findViewById(R.id.locationDesc);
         telClick = (TableRow) findViewById(R.id.telClick);
         telClick.setOnClickListener(this);
+        address_text = (TextView) findViewById(R.id.address_text);
+        tel_text = (TextView) findViewById(R.id.tel_text);
+        desc_text = (TextView) findViewById(R.id.desc_text);
+        travel_text = (TextView) findViewById(R.id.travel_text);
+        web_desc = (TextView) findViewById(R.id.web_desc);
+        web_text = (TextView) findViewById(R.id.web_text);
     }
 
     private void SettingToobar() {
@@ -149,16 +156,21 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
                     //  This will create dynamic image view and add them to ViewFlipper
                     setFlipperImage(data);
                 }
-
+                setStaticTextLang(pref.getLang());
                 if (pref.getLang().equals("TH")) {
-                    address_desc.setText("ที่อยู่ " + location.getAddressTH());
-                    locationDesc.setText(location.getWebsite()+"\n"+location.getAttDetails_Th());
+                    address_desc.setText(location.getAddressTH());
+                    locationDesc.setText(location.getAttDetails_Th());
+                    web_desc.setText(location.getWebsite());
+
                 } else if (pref.getLang().equals("ENG")) {
-                    address_desc.setText("Address " + location.getAddressEng());
-                    locationDesc.setText(location.getWebsite()+"\n"+location.getAttDetails_Eng());
+                    address_desc.setText(location.getAddressEng());
+                    locationDesc.setText(location.getAttDetails_Eng());
+                    web_desc.setText(location.getWebsite());
+
                 } else {
                     address_desc.setText(location.getAddressChi());
-                    locationDesc.setText(location.getWebsite()+"\n"+location.getAttDetails_Chi());
+                    locationDesc.setText(location.getAttDetails_Chi());
+                    web_desc.setText(location.getWebsite());
                 }
 
                 tel_desc.setText(location.getTel());
@@ -167,12 +179,6 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
 
                     TableRow row = new TableRow(getApplicationContext());
                     row.setPadding(10, 10, 10, 10);
-//                    ImageView img = new ImageView(getApplicationContext());
-//                    TableRow.LayoutParams layoutImgview = new TableRow.LayoutParams(80, 80);
-//                    img.setLayoutParams(layoutImgview);
-//                    img.setLayoutParams(layoutImgview);
-//                    img.setBackgroundResource(R.mipmap.car);
-
                     TableRow.LayoutParams layout_gravity = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
                     layout_gravity.weight = 1.0f;
                     layout_gravity.gravity = Gravity.TOP;
@@ -220,7 +226,7 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     tv.setGravity(Gravity.CENTER_VERTICAL);
-                    tv.setTextSize(12);
+                    tv.setTextSize(14);
                     tv.setTextColor(Color.BLACK);
                     row.setGravity(Gravity.CENTER_VERTICAL);
 //                  row.addView(img);
@@ -233,6 +239,37 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
 
         }.execute();
 
+    }
+
+    private void setStaticTextLang(String lang) {
+
+        if (lang.equals("ENG")) {
+            address_text.setText("Address");
+            tel_text.setText("Tel");
+            desc_text.setText("Description");
+            travel_text.setText("Travel By");
+            web_text.setText("Website");
+        } else if (lang.equals("TH")) {
+            address_text.setText("ที่อยู่");
+            tel_text.setText("โทร");
+            desc_text.setText("รายละเอียด");
+            travel_text.setText("การเดินทาง");
+            web_text.setText("เว็ปไซต์");
+        } else {
+            address_text.setText("Address");
+            tel_text.setText("Tel");
+            desc_text.setText("Description");
+            travel_text.setText("Travel By");
+            web_text.setText("Website");
+        }
+
+        if (location.getWebsite().equals("")) {
+            web_text.setVisibility(View.GONE);
+            web_desc.setVisibility(View.GONE);
+        } else {
+            web_text.setVisibility(View.VISIBLE);
+            web_desc.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

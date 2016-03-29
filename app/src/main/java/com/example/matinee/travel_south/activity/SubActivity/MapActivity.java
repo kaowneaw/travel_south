@@ -108,6 +108,14 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.home_map, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void SettingToobar() {
         //Toolbar setting
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -131,6 +139,10 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
         if (id == android.R.id.home) {
 
             this.finish();
+        } else if (id == R.id.home_map) {
+            Intent i = new Intent(this, LocationActivity.class);
+            i.putExtra("province_id", locationIntent.getProvince_id());
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
