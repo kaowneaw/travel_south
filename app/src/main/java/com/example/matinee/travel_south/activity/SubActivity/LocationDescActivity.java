@@ -65,7 +65,7 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
     private float lastX;
     private AQuery aq = new AQuery(this);
     private UserPreference pref;
-    TableRow telClick;
+    TableRow telClick, webClick;
     TextView address_text, tel_text, desc_text, travel_text, web_desc, web_text;
 
     @Override
@@ -97,6 +97,8 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
         travel_text = (TextView) findViewById(R.id.travel_text);
         web_desc = (TextView) findViewById(R.id.web_desc);
         web_text = (TextView) findViewById(R.id.web_text);
+        webClick = (TableRow) findViewById(R.id.webClick);
+        webClick.setOnClickListener(this);
     }
 
     private void SettingToobar() {
@@ -358,8 +360,17 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        String phone = location.getTel();
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
-        startActivity(intent);
+
+        if (v == telClick) {
+            String phone = location.getTel();
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+            startActivity(intent);
+        } else if (v == webClick) {
+            String url = "http://" + location.getWebsite();
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        }
+
     }
 }
