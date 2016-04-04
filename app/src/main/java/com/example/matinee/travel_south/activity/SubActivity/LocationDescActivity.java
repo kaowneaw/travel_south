@@ -170,9 +170,18 @@ public class LocationDescActivity extends AppCompatActivity implements View.OnCl
                     web_desc.setText(location.getWebsite());
 
                 } else {
+
                     address_desc.setText(location.getAddressChi());
                     locationDesc.setText(location.getAttDetails_Chi());
                     web_desc.setText(location.getWebsite());
+                    Log.v("f;kjgkfkfk", location.getAddressChi());
+                    if (address_desc.getText().toString().equals("")) {
+                        address_desc.setText(location.getAddressEng());
+                    }
+                    if (locationDesc.getText().toString().equals("")) {
+                        locationDesc.setText(location.getAttDetails_Eng());
+                    }
+
                 }
 
                 tel_desc.setText(location.getTel());
