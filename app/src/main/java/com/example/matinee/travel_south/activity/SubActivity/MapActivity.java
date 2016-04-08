@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.example.matinee.travel_south.R;
+import com.example.matinee.travel_south.activity.MainActivity;
 import com.example.matinee.travel_south.activity.Model.LocationEntity;
 import com.example.matinee.travel_south.activity.Model.ResultEntity;
 import com.example.matinee.travel_south.activity.TRAVELSOUTH;
@@ -140,8 +141,8 @@ public class MapActivity extends AppCompatActivity implements GoogleApiClient.Co
 
             this.finish();
         } else if (id == R.id.home_map) {
-            Intent i = new Intent(this, LocationActivity.class);
-            i.putExtra("province_id", locationIntent.getProvince_id());
+            Intent i = new Intent(this, MainActivity.class);
+//            i.putExtra("province_id", locationIntent.getProvince_id());
             startActivity(i);
         }
 
