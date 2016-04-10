@@ -77,8 +77,16 @@ public class RecommendAdapter extends BaseAdapter {
             Holder.province_name.setText(listLocation.get(position).getNameEng());
             Holder.location_desc.setText(listLocation.get(position).getAddressEng());
         } else if (pref.getLang().equals("CN")) {
+//            Holder.province_name.setText(listLocation.get(position).getNameChi());
+//            Holder.location_desc.setText(listLocation.get(position).getAddressChi());
             Holder.province_name.setText(listLocation.get(position).getNameChi());
             Holder.location_desc.setText(listLocation.get(position).getAddressChi());
+            if(Holder.province_name.getText().toString().equals("")){
+                Holder.province_name.setText(listLocation.get(position).getNameEng());
+            }
+            if(Holder.location_desc.getText().toString().equals("")){
+                Holder.location_desc.setText(listLocation.get(position).getAddressEng());
+            }
         }
 //        Holder.province_name.setText(listLocation.get(position).getNameTH());
 //        Holder.location_desc.setText(listLocation.get(position).getAddressTH());

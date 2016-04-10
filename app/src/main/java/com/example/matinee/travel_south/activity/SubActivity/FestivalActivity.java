@@ -24,7 +24,10 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FestivalActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -46,6 +49,7 @@ public class FestivalActivity extends AppCompatActivity implements AdapterView.O
 
         lv_festival = (ListView) findViewById(R.id.lv_festival);
         spinner = (Spinner) findViewById(R.id.spinner);
+
         List<String> categories = new ArrayList();
         categories.add("ทั้งหมด");
         categories.add("มกราคม");
@@ -65,6 +69,11 @@ public class FestivalActivity extends AppCompatActivity implements AdapterView.O
         ArrayAdapter dataAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categories);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(this);
+        Date date = new Date();
+        int numDate = date.getMonth()+1;
+        spinner.setSelection(numDate, true);
+        callService(numDate);
+        //Toast.makeText(getApplicationContext(), ">> " + date.getMonth(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -99,10 +108,10 @@ public class FestivalActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onResume() {
         super.onResume();
-        callService();
+
     }
 
-    private void callService() {
+    private void callService(final int numDate) {
 
         final ProgressDialog dialog = new ProgressDialog(this);
         new AsyncTask<Void, Void, Void>() {
@@ -147,11 +156,11 @@ public class FestivalActivity extends AppCompatActivity implements AdapterView.O
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-
-                FestivalAdapter adapter = new FestivalAdapter(getApplicationContext(), listFest);
+//              FestivalAdapter adapter = new FestivalAdapter(getApplicationContext(), listFest);
+//              lv_festival.setAdapter(adapter);
+                List<FestivalEntity> data = filterDataMonth(numDate);
+                FestivalAdapter adapter = new FestivalAdapter(getApplicationContext(), data);
                 lv_festival.setAdapter(adapter);
-
-
             }
         }.execute();
     }
